@@ -13,16 +13,29 @@
             var GAME = new Phaser.Game(1280, 720, Phaser.AUTO, "GAME", {preload: preload, create: create, update: update, render: render})
             
             // REFACTOR: Pull out State Object
+            var player;
+            var background;
             function preload() {
                 GAME.load.image("SHIP", "assets/SpaceShip.png")
                 GAME.load.image("BULLET", "assets/Bullet.png")
                 GAME.load.image("ASTEROID_1", "assets/Asteroid_01.png")
                 GAME.load.image("ASTEROID_2", "assets/Asteroid_02.png")
                 GAME.load.image("ASTEROID_3", "assets/Asteroid_03.png")
+                GAME.load.image("BACKGROUND", "assets/background.png")
+
             }
             
             function create() {
-            
+                game.renderer.clearBeforeRender = false;
+                game.renderer.roundPixels = true;
+
+                //  We need arcade physics
+                game.physics.startSystem(Phaser.Physics.ARCADE);
+                
+
+                game.add.sprite(1280,720,'BACKGROUND');
+                game.add.sprite(300, 300, 'SHIP');
+                
             }
             
             function update() {
