@@ -54,14 +54,17 @@
                 player.body.maxVelocity.set(200);
 
                 asteroidLarge = game.add.group();
+                asteroidLarge.name = "LARGE";
                 asteroidLarge.enableBody = true;
                 asteroidLarge.physicsBodyType = Phaser.Physics.ARCADE;
                 asteroidLarge.createMultiple(10,'ASTEROID_1');
+                asteroidLarge.setAll('scale.x', 2);
+                asteroidLarge.setAll('scale.y', 2);
                 asteroidLarge.setAll('anchor.x',0.5);
                 asteroidLarge.setAll('anchor.y',0.5);
-                asteroidLarge.scale.set(2,2);
 
                 asteroidMedium = game.add.group();
+                asteroidMedium.name = "MEDIUM";
                 asteroidMedium.enableBody = true;
                 asteroidMedium.physicsBodyType = Phaser.Physics.ARCADE;
                 asteroidMedium.createMultiple(30,'ASTEROID_2');
@@ -69,12 +72,14 @@
                 asteroidMedium.setAll('anchor.y',0.5);
 
                 asteroidSmall = game.add.group();
+                asteroidSmall.name = "SMALL";
                 asteroidSmall.enableBody = true;
                 asteroidSmall.physicsBodyType = Phaser.Physics.ARCADE;
                 asteroidSmall.createMultiple(90,'ASTEROID_3');
-                asteroidSmall.setAll('anchorx',0.5);
+                asteroidSmall.setAll('scale.x', 0.5);
+                asteroidSmall.setAll('scale.y', 0.5);
+                asteroidSmall.setAll('anchor.x',0.5);
                 asteroidSmall.setAll('anchor.y',0.5);
-                asteroidSmall.scale.set(0.5,0.5);
 
                 input = game.input.keyboard.createCursorKeys();
                 game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
@@ -101,9 +106,9 @@
                 	fireBullet();
                 }
                 
-                game.physics.arcade.overlapt(bullets, asteroidLarge, degradeLarge);
-                game.physics.arcade.overlapt(bullets, asteroidMedium, degradeMedium);
-                game.physics.arcade.overlapt(bullets, asteroidSmall, degradeSmall);
+                game.physics.arcade.overlap(bullets, asteroidLarge, degradeLarge);
+                game.physics.arcade.overlap(bullets, asteroidMedium, degradeMedium);
+                game.physics.arcade.overlap(bullets, asteroidSmall, degradeSmall);
 
                 screenWrap(player);
                 bullets.forEachExists(screenWrap, this);
@@ -180,9 +185,13 @@
            		var asteroid = group.getFirstExists(false);
 
            		if (asteroid) {
+           			console.log("Spawning Asteroid: ");
+           			console.log("     Group:    " + group.name);
+           			console.log("     Position: " + JSON.stringify(position));
+           			console.log("     Angle:    " + angle);
+           			console.log("     Speed:    " + speed);
            			asteroid.reset(position.x, position.y);
-           			asteroid.angle = angle;
-           			game.physics.arcade.velocityFromRotation(asteroid.rotation, speed, asteroid.body.velocity);
+           		    game.physics.arcade.velocityFromAngle(angle, speed, asteroid.body.velocity);
            		}
            	}
 
@@ -198,16 +207,17 @@
                 destroyAsteroid(bullet, asteroid);
             }
             function splitAsteroid(asteroid, group) {
-                var angle1 = asteroid.angle + 90;
+            	console.log(asteroid);
+                var angle1 = asteroid.angle + 60;
                 var angle2 = asteroid.angle + 180;
-                var angle3 = asteroid.angle + 270;
-                var position = {x: asteroid.body.x, y: asteroid.body.y};
-                var velocity = asteroid.body.velocity * 1.5;
-                spawnAsteroid(group, position, angle1, velocity);
-                spawnAsteroid(group, position, angle2, velocity);
-                spawnAsteroid(group, position, angle3, velocity);
+                var angle3 = asteroid.angle + 300;
+                var position = asteroid.position;
+                var speed = asteroid.body.speed * 1.5;
+                spawnAsteroid(group, position, angle1, speed);
+                spawnAsteroid(group, position, angle2, speed);
+                spawnAsteroid(group, position, angle3, speed);
             }
-            function destoryAsteroid(bullet, asteroid) {
+            function destroyAsteroid(bullet, asteroid) {
                 bullet.kill();
                 asteroid.kill();
             }
