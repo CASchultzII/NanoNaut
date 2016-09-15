@@ -2,27 +2,27 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>NanoNaut - THE GAME</title>
+        <title>NanoNaut - THE game</title>
         
         <!-- Use debug variant of phaser for now. -->
         <script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script>
     </head>
     
-    <body id="GAME">
+    <body id="game">
         <script type="text/javascript">
-            var GAME = new Phaser.Game(1280, 720, Phaser.AUTO, "GAME", {preload: preload, create: create, update: update, render: render});
+            var game = new Phaser.Game(1280, 720, Phaser.AUTO, "game", {preload: preload, create: create, update: update, render: render});
             
             // REFACTOR: Pull out State Object
             var player;
             var background;
             var input;
             function preload() {
-                GAME.load.image("SHIP", "assets/SpaceShip.png");
-                GAME.load.image("BULLET", "assets/Bullet.png");
-                GAME.load.image("ASTEROID_1", "assets/Asteroid_01.png");
-                GAME.load.image("ASTEROID_2", "assets/Asteroid_02.png");
-                GAME.load.image("ASTEROID_3", "assets/Asteroid_03.png");
-                GAME.load.image("BACKGROUND", "assets/background.png");
+                game.load.image("SHIP", "assets/SpaceShip.png");
+                game.load.image("BULLET", "assets/Bullet.png");
+                game.load.image("ASTEROID_1", "assets/Asteroid_01.png");
+                game.load.image("ASTEROID_2", "assets/Asteroid_02.png");
+                game.load.image("ASTEROID_3", "assets/Asteroid_03.png");
+                game.load.image("BACKGROUND", "assets/background.png");
 
             }
             
@@ -36,11 +36,12 @@
                 background = game.add.sprite(1280,720,'BACKGROUND');
                 
                 player = game.add.sprite(300, 300, 'SHIP');
+                player.anchor.set(0.5);
                 game.physics.enable(player, Phaser.Physics.ARCADE);
                 player.body.drag.set(100);
                 player.body.maxVelocity.set(200);
                 
-                input = game.input,keyboard.createCursorKeys();
+                input = game.input.keyboard.createCursorKeys();
                 game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
             }
                 
