@@ -33,17 +33,33 @@
                 game.physics.startSystem(Phaser.Physics.ARCADE);
                 
 
-                game.add.sprite(1280,720,'BACKGROUND');
-                game.add.sprite(300, 300, 'SHIP');
+                background = game.add.sprite(1280,720,'BACKGROUND');
+                player = game.add.sprite(300, 300, 'SHIP');
                 
             }
             
             function update() {
-            
+                 if (input.up.isDown) {
+                    game.physics.arcade.accelerationFromRotation(player.rotation, 200, player.body.acceleration);
+                }
+                else {
+                    player.body.acceleration.set(0);
+                }
+                if (input.left.isDown) {
+                    player.body.angularVelocity = -300;
+                }
+                else if (input.right.isDown) {
+                    player.body.angularVelocity = 300;
+                } 
+                else {
+                    player.body.angularVelocity = 0;
+                }
+
+                screenWrap(player);
             }
             
             function render() {
-            
+
             }
         </script>
     </body>
