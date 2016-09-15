@@ -18,10 +18,9 @@
             var input;
             var bullets;
             var bulletTime = 0;
-            var asteriod;
-            var asteriodLarge;
-            var asteriodMedium;
-            var asteriodSmall;
+            var asteroidLarge;
+            var asteroidMedium;
+            var asteroidSmall;
 
             function preload() {
                 game.load.image("SHIP", "assets/SpaceShip.png");
@@ -55,17 +54,36 @@
                 player.body.drag.set(100);
                 player.body.maxVelocity.set(200);
 
-                asteriodLarge = game.add.sprite(300, 300, 'ASTEROID_1');
-                asteriodMedium = game.add.sprite(300, 300, 'ASTEROID_2');
-                asteriodSmall = game.add.sprite(300, 300, 'ASTEROID_3');
+                asteroidLarge = game.add.group();
+                asteroidLarge.enableBody = true;
+                asteroidLarge.physicsBodyType = Phaser.Physics.ARCADE;
+                asteroidLarge.createMultiple(10,'ASTEROID_1');
+                asteroidLarge.setAll('anchor.x',0.5);
+                asteroidLarge.setAll('anchor.y',0.5);
+                asteroidLarge.scale.set(2,2);
 
-                asteriods = game.add.group
-                
+                asteroidMedium = game.add.group();
+                asteroidMedium.enableBody = true;
+                asteroidMedium.physicsBodyType = Phaser.Physics.ARCADE;
+                asteroidMedium.createMultiple(30,'ASTEROID_2');
+                asteroidMedium.setAll('anchor.x',0.5);
+                asteroidMedium.setAll('anchor.y',0.5);
+
+                asteroidSmall = game.add.group();
+                asteroidSmall.enableBody = true;
+                asteroidSmall.physicsBodyType = Phaser.Physics.ARCADE;
+                asteroidSmall.createMultiple(90,'ASTEROID_3');
+                asteroidSmall.setAll('anchorx',0.5);
+                asteroidSmall.setAll('anchor.y',0.5);
+                asteroidSmall.scale.set(0.5,0.5);
+
                 input = game.input.keyboard.createCursorKeys();
                 game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
             }
                 
             function update() {
+            	spawnasteroids();
+
                 if (input.up.isDown) {
                     game.physics.arcade.accelerationFromRotation(player.rotation, 200, player.body.acceleration);
                 } else {
@@ -122,7 +140,47 @@
             	}
             }
 
+           function spawnasteroids(){
+           		if (Math.random() <= .10) { // Spawn an asteroid?
+           			var position;
+           			if (Math.random() <= .5) { // Spawn to left or right?
+           				var x;
+           				if (Math.random() <= .5) { // Spawn to the left.
+           					x = -100;
+           				} else { // Spawn to the right.
+           					x = game.width + 100;
+           				}
 
+           				var y = Math.random() * game.height;
+           				position = {x: x, y: y};
+           			} else { // Spawn to top or bottom.
+           				var y;
+           				if (Math.random() <= .5) { // Spawn to top or bottom?
+           					y = -100;
+           				} else { // Spawn to bottom.
+           					y = game.height + 100;
+           				}
+
+           				var x = Math.random() * game.width;
+           				position = {x: x, y: y};
+           			}
+
+           			var angle = Math.random() * 360;
+           			var speed = 50;
+
+           			spawnAsteroid(asteroidLarge, position, angle, speed);
+           		}
+           }
+
+           function spawnAsteroid(group, position, angle, speed) {
+           		var asteroid = group.getFirstExists(false);
+
+           		if (asteroid) {
+           			asteroid.reset(position.x, position.y);
+           			asteroid.angle = angle;
+           			game.physics.arcade.velocityFromRotation(asteroid.rotation, speed, asteroid.body.velocity);
+           		}
+           }
         </script>
     </body>
 </html>
