@@ -15,6 +15,7 @@
             // REFACTOR: Pull out State Object
             var player;
             var background;
+            var input;
             function preload() {
                 GAME.load.image("SHIP", "assets/SpaceShip.png");
                 GAME.load.image("BULLET", "assets/Bullet.png");
@@ -33,7 +34,14 @@
                 game.physics.startSystem(Phaser.Physics.ARCADE);
                 
                 background = game.add.sprite(1280,720,'BACKGROUND');
+                
                 player = game.add.sprite(300, 300, 'SHIP');
+                game.physics.enable(player, Phaser.Physics.ARCADE);
+                player.body.drag.set(100);
+                player.body.maxVelocity.set(200);
+                
+                input = game.input,keyboard.createCursorKeys();
+                game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
             }
                 
             function update() {
