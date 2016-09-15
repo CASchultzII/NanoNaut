@@ -10,11 +10,15 @@
     
     <body id="GAME">
         <script type="text/javascript">
-            var GAME = new Phaser.Game(800, 600, Phaser.AUTO, "GAME", {preload: preload, create: create, update: update, render: render})
+            var GAME = new Phaser.Game(1280, 720, Phaser.AUTO, "GAME", {preload: preload, create: create, update: update, render: render})
             
             // REFACTOR: Pull out State Object
             function preload() {
-            
+                GAME.load.image("SHIP", "assets/SpaceShip.png")
+                GAME.load.image("BULLET", "assets/Bullet.png")
+                GAME.load.image("ASTEROID_1", "assets/Asteroid_01.png")
+                GAME.load.image("ASTEROID_2", "assets/Asteroid_02.png")
+                GAME.load.image("ASTEROID_3", "assets/Asteroid_03.png")
             }
             
             function create() {
