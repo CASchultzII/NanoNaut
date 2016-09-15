@@ -16,6 +16,13 @@
             var player;
             var background;
             var input;
+            var bullets;
+            var bulletTime = 0;
+            var asteriod;
+            var asteriodLarge;
+            var asteriodMedium;
+            var asteriodSmall;
+
             function preload() {
                 game.load.image("SHIP", "assets/SpaceShip.png");
                 game.load.image("BULLET", "assets/Bullet.png");
@@ -35,11 +42,24 @@
                 
                 background = game.add.sprite(1280,720,'BACKGROUND');
                 
+                bullets = game.add.group();
+                bullets.enableBody = true;
+                bullets.physicsBodyType = Phaser.Physics.ARCADE;
+                bullets.createMultiple(40,'BULLET');
+                bullets.setAll('anchor.x',0.5);
+                bullets.setAll('anchor.y',0.5);
+
                 player = game.add.sprite(300, 300, 'SHIP');
                 player.anchor.set(0.5);
                 game.physics.enable(player, Phaser.Physics.ARCADE);
                 player.body.drag.set(100);
                 player.body.maxVelocity.set(200);
+
+                asteriodLarge = game.add.sprite(300, 300, 'ASTEROID_1');
+                asteriodMedium = game.add.sprite(300, 300, 'ASTEROID_2');
+                asteriodSmall = game.add.sprite(300, 300, 'ASTEROID_3');
+
+                asteriods = game.add.group
                 
                 input = game.input.keyboard.createCursorKeys();
                 game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
@@ -60,7 +80,13 @@
                     player.body.angularVelocity = 0;
                 }
 
+                if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+                	fireBullet();
+                }
+
                 screenWrap(player);
+
+                bullets.forEachExists(screenWrap,this);
             }
             
             function render() {
@@ -81,6 +107,22 @@
                     sprite.y = 0;
                 }
             }
+
+            function fireBullet() { 
+            	if(game.time.now > bulletTime){
+            		var bullet = bullets.getFirstExists(false);
+
+            		if(bullet){
+            			bullet.reset(player.body.x + 8, player.body.y + 8);
+            			bullet.lifespan = 2000;
+            			bullet.rotation = player.rotation;
+            			game.physics.arcade.velocityFromRotation(player.rotation, 400, bullet.body.velocity);
+            			bulletTime = game.time.now + 50;
+            		}
+            	}
+            }
+
+
         </script>
     </body>
 </html>
