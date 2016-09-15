@@ -5,23 +5,23 @@
         <title>NanoNaut - THE GAME</title>
         
         <!-- Use debug variant of phaser for now. -->
-        <script src="cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script>
+        <script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script>
     </head>
     
     <body id="GAME">
         <script type="text/javascript">
-            var GAME = new Phaser.Game(1280, 720, Phaser.AUTO, "GAME", {preload: preload, create: create, update: update, render: render})
+            var GAME = new Phaser.Game(1280, 720, Phaser.AUTO, "GAME", {preload: preload, create: create, update: update, render: render});
             
             // REFACTOR: Pull out State Object
             var player;
             var background;
             function preload() {
-                GAME.load.image("SHIP", "assets/SpaceShip.png")
-                GAME.load.image("BULLET", "assets/Bullet.png")
-                GAME.load.image("ASTEROID_1", "assets/Asteroid_01.png")
-                GAME.load.image("ASTEROID_2", "assets/Asteroid_02.png")
-                GAME.load.image("ASTEROID_3", "assets/Asteroid_03.png")
-                GAME.load.image("BACKGROUND", "assets/background.png")
+                GAME.load.image("SHIP", "assets/SpaceShip.png");
+                GAME.load.image("BULLET", "assets/Bullet.png");
+                GAME.load.image("ASTEROID_1", "assets/Asteroid_01.png");
+                GAME.load.image("ASTEROID_2", "assets/Asteroid_02.png");
+                GAME.load.image("ASTEROID_3", "assets/Asteroid_03.png");
+                GAME.load.image("BACKGROUND", "assets/background.png");
 
             }
             
@@ -36,19 +36,17 @@
                 player = game.add.sprite(300, 300, 'SHIP');
                 
             function update() {
-                 if (input.up.isDown) {
+                if (input.up.isDown) {
                     game.physics.arcade.accelerationFromRotation(player.rotation, 200, player.body.acceleration);
-                }
-                else {
+                } else {
                     player.body.acceleration.set(0);
                 }
+                
                 if (input.left.isDown) {
                     player.body.angularVelocity = -300;
-                }
-                else if (input.right.isDown) {
+                } else if (input.right.isDown) {
                     player.body.angularVelocity = 300;
-                } 
-                else {
+                } else {
                     player.body.angularVelocity = 0;
                 }
 
@@ -72,7 +70,6 @@
                 } else if (sprite.y > game.height) {
                     sprite.y = 0;
                 }
-
             }
         </script>
     </body>
