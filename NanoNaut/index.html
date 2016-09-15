@@ -29,7 +29,6 @@
                 game.load.image("ASTEROID_2", "assets/Asteroid_02.png");
                 game.load.image("ASTEROID_3", "assets/Asteroid_03.png");
                 game.load.image("BACKGROUND", "assets/background.png");
-
             }
             
             function create() {
@@ -101,10 +100,16 @@
                 if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
                 	fireBullet();
                 }
+                
+                game.physics.arcade.overlapt(bullets, asteroidLarge, degradeLarge);
+                game.physics.arcade.overlapt(bullets, asteroidMedium, degradeMedium);
+                game.physics.arcade.overlapt(bullets, asteroidSmall, degradeSmall);
 
                 screenWrap(player);
-
-                bullets.forEachExists(screenWrap,this);
+                bullets.forEachExists(screenWrap, this);
+                asteroidLarge.forEachExists(screenWrap, this);
+                asteroidMedium.forEachExists(screenWrap, this);
+                asteroidSmall.forEachExists(screenWrap, this);
             }
             
             function render() {
@@ -170,9 +175,8 @@
 
            			spawnAsteroid(asteroidLarge, position, angle, speed);
            		}
-           }
-
-           function spawnAsteroid(group, position, angle, speed) {
+           	}
+           	function spawnAsteroid(group, position, angle, speed) {
            		var asteroid = group.getFirstExists(false);
 
            		if (asteroid) {
@@ -180,7 +184,33 @@
            			asteroid.angle = angle;
            			game.physics.arcade.velocityFromRotation(asteroid.rotation, speed, asteroid.body.velocity);
            		}
-           }
+           	}
+
+            function degradeLarge(bullet, asteroid) {
+                destroyAsteroid(bullet, asteroid);
+                splitAsteroid(asteroid, asteroidMedium);
+            }
+            function degradeMedium(bullet, asteroid) {
+                destroyAsteroid(bullet, asteroid);
+                splitAsteroid(asteroid, asteroidSmall);
+            }
+            function degradeSmall(bullet, asteroid) {
+                destroyAsteroid(bullet, asteroid);
+            }
+            function splitAsteroid(asteroid, group) {
+                var angle1 = asteroid.angle + 90;
+                var angle2 = asteroid.angle + 180;
+                var angle3 = asteroid.angle + 270;
+                var position = {x: asteroid.body.x, y: asteroid.body.y};
+                var velocity = asteroid.body.velocity * 1.5;
+                spawnAsteroid(group, position, angle1, velocity);
+                spawnAsteroid(group, position, angle2, velocity);
+                spawnAsteroid(group, position, angle3, velocity);
+            }
+            function destoryAsteroid(bullet, asteroid) {
+                bullet.kill();
+                asteroid.kill();
+            }
         </script>
     </body>
 </html>
