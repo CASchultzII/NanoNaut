@@ -6,7 +6,9 @@
         
         <!-- Use debug variant of phaser for now. -->
         <script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script>
+        <script src="scripts/utilities.js"></script>
         <script src="scripts/assets.js"></script>
+        <script src="scripts/asteroids.js"></script>
     </head>
     
     <body id="game">
@@ -15,13 +17,10 @@
             
             // REFACTOR: Pull out State Object
             var player;
-            var background;
             var input;
             var bullets;
             var bulletTime = 0;
-            var asteroidLarge;
-            var asteroidMedium;
-            var asteroidSmall;
+            var asteroids = new ASTEROIDS(game);
 
             function preload() {
                 var assets = new Assets(game);
@@ -31,11 +30,9 @@
             function create() {
                 game.renderer.clearBeforeRender = false;
                 game.renderer.roundPixels = true;
-
-                //  We need arcade physics
                 game.physics.startSystem(Phaser.Physics.ARCADE);
                 
-                background = game.add.sprite(1280,720,'BACKGROUND');
+                var background = game.add.sprite(1280,720,'BACKGROUND');
                 
                 bullets = game.add.group();
                 bullets.enableBody = true;
@@ -50,40 +47,16 @@
                 player.body.drag.set(100);
                 player.body.maxVelocity.set(200);
 
-                asteroidLarge = game.add.group();
-                asteroidLarge.name = "LARGE";
-                asteroidLarge.enableBody = true;
-                asteroidLarge.physicsBodyType = Phaser.Physics.ARCADE;
-                asteroidLarge.createMultiple(10,'ASTEROID_1');
-                asteroidLarge.setAll('scale.x', 2);
-                asteroidLarge.setAll('scale.y', 2);
-                asteroidLarge.setAll('anchor.x',0.5);
-                asteroidLarge.setAll('anchor.y',0.5);
-
-                asteroidMedium = game.add.group();
-                asteroidMedium.name = "MEDIUM";
-                asteroidMedium.enableBody = true;
-                asteroidMedium.physicsBodyType = Phaser.Physics.ARCADE;
-                asteroidMedium.createMultiple(30,'ASTEROID_2');
-                asteroidMedium.setAll('anchor.x',0.5);
-                asteroidMedium.setAll('anchor.y',0.5);
-
-                asteroidSmall = game.add.group();
-                asteroidSmall.name = "SMALL";
-                asteroidSmall.enableBody = true;
-                asteroidSmall.physicsBodyType = Phaser.Physics.ARCADE;
-                asteroidSmall.createMultiple(90,'ASTEROID_3');
-                asteroidSmall.setAll('scale.x', 0.5);
-                asteroidSmall.setAll('scale.y', 0.5);
-                asteroidSmall.setAll('anchor.x',0.5);
-                asteroidSmall.setAll('anchor.y',0.5);
+                asteroids.create_group("LARGE", 10, "ASTEROID_1", 2, "MEDIUM");
+                asteroids.create_group("MEDIUM", 30, "ASTEROID_2", 1, "SMALL");
+                asteroids.create_group("SMALL", 90, "ASTEROID_3", 0.5);
 
                 input = game.input.keyboard.createCursorKeys();
                 game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
             }
                 
             function update() {
-            	spawnasteroids();
+            	asteroids.update(bullets, Math.random() < .1, "LARGE");
 
                 if (input.up.isDown) {
                     game.physics.arcade.accelerationFromRotation(player.rotation, 200, player.body.acceleration);
@@ -103,34 +76,12 @@
                 	fireBullet();
                 }
                 
-                game.physics.arcade.overlap(bullets, asteroidLarge, degradeLarge);
-                game.physics.arcade.overlap(bullets, asteroidMedium, degradeMedium);
-                game.physics.arcade.overlap(bullets, asteroidSmall, degradeSmall);
-
-                screenWrap(player);
-                bullets.forEachExists(screenWrap, this);
-                asteroidLarge.forEachExists(screenWrap, this);
-                asteroidMedium.forEachExists(screenWrap, this);
-                asteroidSmall.forEachExists(screenWrap, this);
+                UTILITIES.screen_wrap(player, game);
+                bullets.forEachExists(UTILITIES.screen_wrap, this, game);
             }
             
             function render() {
-            
-            }
-            
-            // OTHER FUNCTIONS
-            function screenWrap (sprite) {
-                if (sprite.x < 0) {
-                    sprite.x = game.width;
-                } else if (sprite.x > game.width) {
-                    sprite.x = 0;
-                }
-
-                if (sprite.y < 0) {
-                    sprite.y = game.height;
-                } else if (sprite.y > game.height) {
-                    sprite.y = 0;
-                }
+                // Poor little render :P
             }
 
             function fireBullet() { 
@@ -145,78 +96,6 @@
             			bulletTime = game.time.now + 50;
             		}
             	}
-            }
-
-           function spawnasteroids(){
-           		if (Math.random() <= .10) { // Spawn an asteroid?
-           			var position;
-           			if (Math.random() <= .5) { // Spawn to left or right?
-           				var x;
-           				if (Math.random() <= .5) { // Spawn to the left.
-           					x = -100;
-           				} else { // Spawn to the right.
-           					x = game.width + 100;
-           				}
-
-           				var y = Math.random() * game.height;
-           				position = {x: x, y: y};
-           			} else { // Spawn to top or bottom.
-           				var y;
-           				if (Math.random() <= .5) { // Spawn to top or bottom?
-           					y = -100;
-           				} else { // Spawn to bottom.
-           					y = game.height + 100;
-           				}
-
-           				var x = Math.random() * game.width;
-           				position = {x: x, y: y};
-           			}
-
-           			var angle = Math.random() * 360;
-           			var speed = 50;
-
-           			spawnAsteroid(asteroidLarge, position, angle, speed);
-           		}
-           	}
-           	function spawnAsteroid(group, position, angle, speed) {
-           		var asteroid = group.getFirstExists(false);
-
-           		if (asteroid) {
-           			console.log("Spawning Asteroid: ");
-           			console.log("     Group:    " + group.name);
-           			console.log("     Position: " + JSON.stringify(position));
-           			console.log("     Angle:    " + angle);
-           			console.log("     Speed:    " + speed);
-           			asteroid.reset(position.x, position.y);
-           		    game.physics.arcade.velocityFromAngle(angle, speed, asteroid.body.velocity);
-           		}
-           	}
-
-            function degradeLarge(bullet, asteroid) {
-                destroyAsteroid(bullet, asteroid);
-                splitAsteroid(asteroid, asteroidMedium);
-            }
-            function degradeMedium(bullet, asteroid) {
-                destroyAsteroid(bullet, asteroid);
-                splitAsteroid(asteroid, asteroidSmall);
-            }
-            function degradeSmall(bullet, asteroid) {
-                destroyAsteroid(bullet, asteroid);
-            }
-            function splitAsteroid(asteroid, group) {
-            	console.log(asteroid);
-                var angle1 = asteroid.angle + 60;
-                var angle2 = asteroid.angle + 180;
-                var angle3 = asteroid.angle + 300;
-                var position = asteroid.position;
-                var speed = asteroid.body.speed * 1.5;
-                spawnAsteroid(group, position, angle1, speed);
-                spawnAsteroid(group, position, angle2, speed);
-                spawnAsteroid(group, position, angle3, speed);
-            }
-            function destroyAsteroid(bullet, asteroid) {
-                bullet.kill();
-                asteroid.kill();
             }
         </script>
     </body>
