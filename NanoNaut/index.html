@@ -9,18 +9,15 @@
         <script src="scripts/utilities.js"></script>
         <script src="scripts/assets.js"></script>
         <script src="scripts/asteroids.js"></script>
+        <script src="scripts/player.js"></script>
     </head>
     
     <body id="game">
         <script type="text/javascript">
             var game = new Phaser.Game(1280, 720, Phaser.AUTO, "game", {preload: preload, create: create, update: update, render: render});
             
-            // REFACTOR: Pull out State Object
+            var asteroids;
             var player;
-            var input;
-            var bullets;
-            var bulletTime = 0;
-            var asteroids = new ASTEROIDS(game);
 
             function preload() {
                 var assets = new Assets(game);
@@ -34,68 +31,21 @@
                 
                 var background = game.add.sprite(1280,720,'BACKGROUND');
                 
-                bullets = game.add.group();
-                bullets.enableBody = true;
-                bullets.physicsBodyType = Phaser.Physics.ARCADE;
-                bullets.createMultiple(40,'BULLET');
-                bullets.setAll('anchor.x',0.5);
-                bullets.setAll('anchor.y',0.5);
+                player = new PLAYER(game);
 
-                player = game.add.sprite(300, 300, 'SHIP');
-                player.anchor.set(0.5);
-                game.physics.enable(player, Phaser.Physics.ARCADE);
-                player.body.drag.set(100);
-                player.body.maxVelocity.set(200);
-
+                asteroids = new ASTEROIDS(game);
                 asteroids.create_group("LARGE", 10, "ASTEROID_1", 2, "MEDIUM");
                 asteroids.create_group("MEDIUM", 30, "ASTEROID_2", 1, "SMALL");
                 asteroids.create_group("SMALL", 90, "ASTEROID_3", 0.5);
-
-                input = game.input.keyboard.createCursorKeys();
-                game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
             }
                 
             function update() {
-            	asteroids.update(bullets, Math.random() < .1, "LARGE");
-
-                if (input.up.isDown) {
-                    game.physics.arcade.accelerationFromRotation(player.rotation, 200, player.body.acceleration);
-                } else {
-                    player.body.acceleration.set(0);
-                }
-                
-                if (input.left.isDown) {
-                    player.body.angularVelocity = -300;
-                } else if (input.right.isDown) {
-                    player.body.angularVelocity = 300;
-                } else {
-                    player.body.angularVelocity = 0;
-                }
-
-                if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-                	fireBullet();
-                }
-                
-                UTILITIES.screen_wrap(player, game);
-                bullets.forEachExists(UTILITIES.screen_wrap, this, game);
+            	asteroids.update(player.bullets, Math.random() < .1, "LARGE");
+                player.update();
             }
             
             function render() {
                 // Poor little render :P
-            }
-
-            function fireBullet() { 
-            	if(game.time.now > bulletTime){
-            		var bullet = bullets.getFirstExists(false);
-
-            		if(bullet){
-            			bullet.reset(player.body.x + 8, player.body.y + 8);
-            			bullet.lifespan = 2000;
-            			bullet.rotation = player.rotation;
-            			game.physics.arcade.velocityFromRotation(player.rotation, 400, bullet.body.velocity);
-            			bulletTime = game.time.now + 50;
-            		}
-            	}
             }
         </script>
     </body>
