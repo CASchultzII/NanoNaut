@@ -7,17 +7,12 @@ var PLAYER = function(game) {
     this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
     this.player.body.drag.set(100);
     this.player.body.maxVelocity.set(200);
+    
+    // Player can dash!
     this.speedVal = 200;
     this.invulnerable = false;
-
-    // Players have bullets!!
-    this.bullets = this.game.add.group();
-    this.bullets.enableBody = true;
-    this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
-    this.bullets.createMultiple(40, "BULLET");
-    this.bullets.setAll("anchor.x", 0.5);
-    this.bullets.setAll("anchor.y", 0.5);
-    this.bulletTime = 0;
+    this.dashTime = 1500;
+    this.lastClock = 0;
 
     // Player has score!
     this.score = 0;
@@ -57,7 +52,6 @@ var PLAYER = function(game) {
         this.dash(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR));
 
         UTILITIES.screen_wrap(this.player, this.game);
-        this.bullets.forEachExists(UTILITIES.screen_wrap, this, this.game);
 
         this.scoreText.text = "Score: " + this.score;
     };
@@ -79,26 +73,25 @@ var PLAYER = function(game) {
             this.player.body.angularVelocity = 0;
         }
     };
-
-    // UNUSED FOR NOW
-    this.fire_bullet = function() {
-        if (this.game.time.now > this.bulletTime) {
-            var bullet = this.bullets.getFirstExists(false);
-
-            if (bullet) {
-                bullet.reset(this.player.body.x + 8, this.player.body.y + 8);
-                bullet.lifespan = 2000;
-                bullet.rotation = this.player.rotation;
-                this.game.physics.arcade.velocityFromRotation(
-                        this.player.rotation, 400, bullet.body.velocity);
-                this.bulletTime = this.game.time.now + 50;
-            }
-        }
-    };
     
     this.dash = function(bool) {
-        this.player.body.maxVelocity.set(bool ? 400 : 200);
-        this.speedVal = bool ? 400 : 200;
+        if (this.invulnerable) {
+            this.dashTime -= this.game.time.now - this.lastClock;
+        } else {
+            if (this.dashTime < 1500) {
+                this.dashTime += this.game.time.now - this.lastClock;
+                if (this.dashTime > 1500) this.dashTime = 1500;
+            } else if (this.dashTime > 1500) {
+                this.dashTime = 1500;
+            }
+        }
+        
+        bool = bool && this.dashTime > 0;
+        
+        this.player.body.maxVelocity.set(bool ? 700 : 200);
+        this.speedVal = bool ? 700 : 200;
         this.invulnerable = bool;
+        
+        this.lastClock = this.game.time.now;
     };
 }

@@ -19,10 +19,6 @@ var ASTEROIDS = function(game) {
 
         for (var key in this.groups) {
             var group = this.groups[key];
-            this.game.physics.arcade.overlap(player.bullets, group.group,
-                    function(bullet, asteroid) {
-                        group.degrade(bullet, asteroid); player.score += 10;
-                    }, null, group);
             group.group.forEachExists(UTILITIES.screen_wrap, this, this.game);
 
             // check if player got hit:
