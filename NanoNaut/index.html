@@ -6,6 +6,7 @@
         
         <!-- Use debug variant of phaser for now. -->
         <script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script>
+        <script src="scripts/assets.js"></script>
     </head>
     
     <body id="game">
@@ -23,12 +24,8 @@
             var asteroidSmall;
 
             function preload() {
-                game.load.image("SHIP", "assets/SpaceShip.png");
-                game.load.image("BULLET", "assets/Bullet.png");
-                game.load.image("ASTEROID_1", "assets/Asteroid_01.png");
-                game.load.image("ASTEROID_2", "assets/Asteroid_02.png");
-                game.load.image("ASTEROID_3", "assets/Asteroid_03.png");
-                game.load.image("BACKGROUND", "assets/background.png");
+                var assets = new Assets(game);
+                assets.load_assets();
             }
             
             function create() {
