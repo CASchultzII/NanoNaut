@@ -1,7 +1,7 @@
 // This script will load in all assets when instructed to do so.
 // This script can also be used to store and load configuration values.
 
-var Assets = function(game) {
+var ASSETS = function(game) {
     this.game = game;
 
     this.load_assets = function() {

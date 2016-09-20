@@ -16,11 +16,12 @@
         <script type="text/javascript">
             var game = new Phaser.Game(1280, 720, Phaser.AUTO, "game", {preload: preload, create: create, update: update, render: render});
             
+            var assets;
             var asteroids;
             var player;
 
             function preload() {
-                var assets = new Assets(game);
+                assets = new ASSETS(game);
                 assets.load_assets();
             }
             
