@@ -7,6 +7,8 @@ var PLAYER = function(game) {
     this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
     this.player.body.drag.set(100);
     this.player.body.maxVelocity.set(200);
+    this.speedVal = 200;
+    this.invulnerable = false;
 
     // Players have bullets!!
     this.bullets = this.game.add.group();
@@ -52,10 +54,7 @@ var PLAYER = function(game) {
         }
 
         this.move_player();
-
-        if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-            this.fire_bullet();
-        }
+        this.dash(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR));
 
         UTILITIES.screen_wrap(this.player, this.game);
         this.bullets.forEachExists(UTILITIES.screen_wrap, this, this.game);
@@ -65,9 +64,9 @@ var PLAYER = function(game) {
 
     // INTERNALS
     this.move_player = function() {
-        if (this.input.up.isDown) {
+        if (this.input.up.isDown || this.invulnerable) { // if invulnerable, player is dashing
             this.game.physics.arcade.accelerationFromRotation(
-                    this.player.rotation, 200, this.player.body.acceleration);
+                    this.player.rotation, this.speedVal, this.player.body.acceleration);
         } else {
             this.player.body.acceleration.set(0);
         }
@@ -81,6 +80,7 @@ var PLAYER = function(game) {
         }
     };
 
+    // UNUSED FOR NOW
     this.fire_bullet = function() {
         if (this.game.time.now > this.bulletTime) {
             var bullet = this.bullets.getFirstExists(false);
@@ -94,5 +94,11 @@ var PLAYER = function(game) {
                 this.bulletTime = this.game.time.now + 50;
             }
         }
+    };
+    
+    this.dash = function(bool) {
+        this.player.body.maxVelocity.set(bool ? 400 : 200);
+        this.speedVal = bool ? 400 : 200;
+        this.invulnerable = bool;
     };
 }

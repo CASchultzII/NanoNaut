@@ -27,7 +27,9 @@ var ASTEROIDS = function(game) {
 
             // check if player got hit:
             this.game.physics.arcade.overlap(player.player, group.group,
-                    function() {player.player.kill();});
+                    function() {player.player.kill();},
+                    function() {return !player.invulnerable;}
+                );
         }
     };
 
