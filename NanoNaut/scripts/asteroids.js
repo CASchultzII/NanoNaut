@@ -23,8 +23,13 @@ var ASTEROIDS = function(game) {
 
             // check if player got hit:
             this.game.physics.arcade.overlap(player.player, group.group,
-                    function() {player.player.kill();},
-                    function() {return !player.invulnerable;}
+                    function(playerSprite, asteroid) {
+                        if (player.invulnerable && !asteroid.invulnerable()) {
+                            group.degrade(asteroid);
+                        } else if (!player.invulnerable) {
+                            playerSprite.kill();
+                        }
+                    }
                 );
         }
     };
@@ -81,6 +86,11 @@ var ASTEROIDS = function(game) {
                 asteroid.reset(position.x, position.y);
                 this.game.physics.arcade.velocityFromAngle(angle, speed,
                         asteroid.body.velocity);
+                        
+                var time = this.game.time.now;
+                asteroid.invulnerable = function() {
+                    return this.game.time.now < time + 100; 
+                }
             }
         }
     }; 
@@ -102,13 +112,12 @@ var AsteroidGroup = function (asteroids, game, name, num, asset, scale = 1,
     this.group.setAll("anchor.x", 0.5);
     this.group.setAll("anchor.y", 0.5);
 
-    this.degrade = function(bullet, asteroid) {
+    this.degrade = function(asteroid) {
         if (degradeGroup != null) { // SAFETY!!
             this.split(asteroid);
         }
 
         // Kill our group elements.
-        bullet.kill();
         asteroid.kill();
     };
 
