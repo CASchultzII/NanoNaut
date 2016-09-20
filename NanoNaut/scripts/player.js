@@ -42,7 +42,7 @@ var PLAYER = function(game) {
         if (!this.player.alive) {
             this.gameOverText.text = "GAMEOVER";
 
-            if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+            if (this.input.down.isDown) {
                 this.game.state.restart();
                 this.score = 0;
             }
