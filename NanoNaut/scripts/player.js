@@ -17,11 +17,40 @@ var PLAYER = function(game) {
     this.bullets.setAll("anchor.y", 0.5);
     this.bulletTime = 0;
 
+    // Player has score!
+    this.score = 0;
+    this.scoreText = this.game.add.text(100, 30, "", {
+            font: "20px serif",
+            fill: "#ff0044",
+            align: "center"
+        });
+    this.scoreText.anchor.setTo(0.5, 0.5);
+
+    // GAMEOVER
+    this.gameOverText = this.game.add.retroFont("BLUEPINKFONT", 32, 32,
+            Phaser.RetroFont.TEXT_SET2, 10);
+    this.gameOverText.text = "";
+    this.gameOverImage = this.game.add.image(this.game.world.centerX,
+            this.game.world.centerY, this.gameOverText);
+    this.gameOverImage.anchor.set(0.5);
+    this.game.time.events.loop(Phaser.Timer.SECOND * 2, function() {
+            this.gameOverImage.tint = Math.random() * 0xFFFFFF;
+        }, this);
+
     // Player has controls!
     this.input = this.game.input.keyboard.createCursorKeys();
     this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
 
     this.update = function() {
+        if (!this.player.alive) {
+            this.gameOverText.text = "GAMEOVER";
+
+            if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+                this.game.state.restart();
+                this.score = 0;
+            }
+        }
+
         this.move_player();
 
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
@@ -30,6 +59,8 @@ var PLAYER = function(game) {
 
         UTILITIES.screen_wrap(this.player, this.game);
         this.bullets.forEachExists(UTILITIES.screen_wrap, this, this.game);
+
+        this.scoreText.text = "Score: " + this.score;
     };
 
     // INTERNALS

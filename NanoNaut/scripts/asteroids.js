@@ -11,7 +11,7 @@ var ASTEROIDS = function(game) {
                 scale, degradeGroup);
     };
 
-    this.update = function(bulletGroup, generateAsteroid, group = null,
+    this.update = function(player, generateAsteroid, group = null,
             speed = 50) {
         if (generateAsteroid && group != null) {
             this.generate(group, speed);
@@ -19,9 +19,15 @@ var ASTEROIDS = function(game) {
 
         for (var key in this.groups) {
             var group = this.groups[key];
-            this.game.physics.arcade.overlap(bulletGroup, group.group,
-                    group.degrade, null, group);
+            this.game.physics.arcade.overlap(player.bullets, group.group,
+                    function(bullet, asteroid) {
+                        group.degrade(bullet, asteroid); player.score += 10;
+                    }, null, group);
             group.group.forEachExists(UTILITIES.screen_wrap, this, this.game);
+
+            // check if player got hit:
+            this.game.physics.arcade.overlap(player.player, group.group,
+                    function() {player.player.kill();});
         }
     };
 
@@ -79,7 +85,7 @@ var ASTEROIDS = function(game) {
                         asteroid.body.velocity);
             }
         }
-    };
+    }; 
 }
 
 // Helper classes, not to be instantiated by 'main'
@@ -95,7 +101,6 @@ var AsteroidGroup = function (asteroids, game, name, num, asset, scale = 1,
 
     this.group.setAll("scale.x", scale);
     this.group.setAll("scale.y", scale);
-
     this.group.setAll("anchor.x", 0.5);
     this.group.setAll("anchor.y", 0.5);
 
