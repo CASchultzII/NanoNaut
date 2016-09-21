@@ -22,10 +22,12 @@ var PLAYER = function(game) {
             align: "center"
         });
     this.scoreText.anchor.setTo(0.5, 0.5);
+ 
+    this.decrementer = 294; //the length of the bar
 
     // GAMEOVER
     this.gameOverText = this.game.add.retroFont("BLUEPINKFONT", 32, 32,
-            Phaser.RetroFont.TEXT_SET2, 10);
+        Phaser.RetroFont.TEXT_SET2, 10);
     this.gameOverText.text = "";
     this.gameOverImage = this.game.add.image(this.game.world.centerX,
             this.game.world.centerY, this.gameOverText);
@@ -48,8 +50,20 @@ var PLAYER = function(game) {
             }
         }
 
+        var graphics = game.add.graphics(0 , 0);
+              
+        graphics.lineStyle(2, 0xffd800, 1);
+        graphics.beginFill(0xFF3300);
+        graphics.drawRect(950, 10, this.decrementer, 30);
+        game.renderer.clearBeforeRender = false;
+
+        
+
+
         this.move_player();
         this.dash(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR));
+
+       
 
         UTILITIES.screen_wrap(this.player, this.game);
 
@@ -77,11 +91,16 @@ var PLAYER = function(game) {
     this.dash = function(bool) {
         if (this.invulnerable) {
             this.dashTime -= this.game.time.now - this.lastClock;
+            if(this.decrementer > 0){
+                this.decrementer--;
+            }
         } else {
+
             if (this.dashTime < 1500) {
                 this.dashTime += this.game.time.now - this.lastClock;
-                if (this.dashTime > 1500) this.dashTime = 1500;
-            } else if (this.dashTime > 1500) {
+            }
+            if (this.dashTime > 1500) this.dashTime = 1500;   
+            else if (this.dashTime > 1500) {
                 this.dashTime = 1500;
             }
         }
@@ -91,7 +110,9 @@ var PLAYER = function(game) {
         this.player.body.maxVelocity.set(bool ? 700 : 200);
         this.speedVal = bool ? 700 : 200;
         this.invulnerable = bool;
-        
+        if(this.decrementer == 0){
+            this.speedVal = 200;
+        }
         this.lastClock = this.game.time.now;
     };
 }
