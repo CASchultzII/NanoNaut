@@ -14,6 +14,17 @@ var PLAYER = function(game) {
     this.dashTime = 1500;
     this.lastClock = 0;
 
+    // Player has a dash HUD!
+    this.maxDashBar = this.game.add.sprite(950, 10, "BAR");
+    //this.maxDashBar.anchor.setTo(0, 1);
+    this.maxDashBar.fixedToCamera = true;
+    this.maxDashBar.tint = 0xFFD800;
+    
+    this.dashBar = this.game.add.sprite(950, 10, "BAR");
+    //this.dashBar.anchor.setTo(0, 1);
+    this.dashBar.fixedToCamera = true;
+    this.dashBar.tint = 0xFF3300;
+
     // Player has score!
     this.score = 0;
     this.scoreText = this.game.add.text(100, 30, "", {
@@ -42,7 +53,7 @@ var PLAYER = function(game) {
         if (!this.player.alive) {
             this.gameOverText.text = "GAMEOVER";
 
-            if (this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+            if (this.input.down.isDown) {
                 this.game.state.restart();
                 this.score = 0;
             }
@@ -54,6 +65,9 @@ var PLAYER = function(game) {
         UTILITIES.screen_wrap(this.player, this.game);
 
         this.scoreText.text = "Score: " + this.score;
+
+        var scale = this.dashTime / 1500;
+        this.dashBar.scale.setTo(scale > 0 ? scale : 0, 1);
     };
 
     // INTERNALS

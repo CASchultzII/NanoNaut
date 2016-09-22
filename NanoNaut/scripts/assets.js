@@ -12,5 +12,6 @@ var ASSETS = function(game) {
         this.game.load.image("ASTEROID_3", "assets/Asteroid_03.png");
         this.game.load.image("BACKGROUND", "assets/background.png");
         this.game.load.image("BLUEPINKFONT", "assets/bluepinkfont.png");
+        this.game.load.image("BAR", "assets/Bar.png");
     }
 }
