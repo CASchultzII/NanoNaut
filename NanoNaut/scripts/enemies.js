@@ -15,7 +15,7 @@ var ENEMIES = function(game) {
         this.BASIC.SINGLES.forEachExists(UTILITIES.screen_wrap, this, this.game);
         
         //// Handle generation of individual Enemy groups.
-        if (Math.random() < .05) { // Spawn Basic Triple
+        if (Math.random() < .005) { // Spawn Basic Triple
             this.BASIC.spawnTriple();
         }
 

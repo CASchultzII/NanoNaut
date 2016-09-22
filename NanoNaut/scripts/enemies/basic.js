@@ -10,7 +10,9 @@ var Enemy_Basic = function(game) {
     this.TRIPLES.name = "Basic Triples";
     this.TRIPLES.enableBody = true;
     this.TRIPLES.physicsBodyType = Phaser.Physics.ARCADE;
-    this.TRIPLES.createMultiple(15, "BASIC_TRIPLE");
+    this.TRIPLES.createMultiple(15, "BASIC_TRIPLE_A");
+    this.TRIPLES.callAll("animations.add", "animations", "move");
+    this.TRIPLES.callAll("animations.play", "animations", "move", 4, true);
     this.TRIPLES.setAll("anchor.x", 0.5);
     this.TRIPLES.setAll("anchor.y", 0.5);
 
@@ -19,7 +21,9 @@ var Enemy_Basic = function(game) {
     this.SINGLES.name = "Basic Singles";
     this.SINGLES.enableBody = true;
     this.SINGLES.physicsBodyType = Phaser.Physics.ARCADE;
-    this.SINGLES.createMultiple(45, "BASIC_SINGLE");
+    this.SINGLES.createMultiple(45, "BASIC_SINGLE_A");
+    this.SINGLES.callAll("animations.add", "animations", "move");
+    this.SINGLES.callAll("animations.play", "animations", "move", 4, true);
     this.SINGLES.setAll("anchor.x", 0.5);
     this.SINGLES.setAll("anchor.y", 0.5);
 
