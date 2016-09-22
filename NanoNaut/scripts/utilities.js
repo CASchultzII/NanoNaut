@@ -45,5 +45,9 @@ var UTILITIES = {
 
     get_random_angle: function() {
         return Math.random() * 360;
+    },
+    
+    get_random_rotation: function() {
+        return Math.random() * 100 - 50;
     }
 };

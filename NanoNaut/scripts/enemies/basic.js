@@ -46,12 +46,14 @@ var Enemy_Basic = function(game) {
         var position = UTILITIES.get_random_spawn(this.game);
         var angle = UTILITIES.get_random_angle();
         var speed = 75;
+        var angularV = UTILITIES.get_random_rotation();
 
         var triple = this.TRIPLES.getFirstExists(false);
         if (triple) {
             triple.reset(position.x, position.y);
             this.game.physics.arcade.velocityFromAngle(angle, speed,
                     triple.body.velocity);
+            triple.body.angularVelocity = angularV;
 
             var time = this.game.time.now;
             triple.invulnerable = function() {
@@ -64,6 +66,7 @@ var Enemy_Basic = function(game) {
         var single = this.SINGLES.getFirstExists(false);
 
         if (single) {
+            var angularV = UTILITIES.get_random_rotation();
             console.log("Spawning Basic Single: ");
             console.log("     Position: " + JSON.stringify(position));
             console.log("     Angle:    " + angle);
@@ -73,6 +76,7 @@ var Enemy_Basic = function(game) {
             single.reset(position.x, position.y);
             this.game.physics.arcade.velocityFromAngle(angle, speed,
                     single.body.velocity);
+            single.body.angularVelocity = angularV;
 
             var time = this.game.time.now;
             single.invulnerable = function() {
