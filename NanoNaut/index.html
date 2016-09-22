@@ -31,7 +31,7 @@
                 game.renderer.roundPixels = true;
                 game.physics.startSystem(Phaser.Physics.ARCADE);
                 
-                var background = game.add.sprite(1280,720,'BACKGROUND');
+                var background = game.add.tileSprite(0, 0, 1280,720,'BACKGROUND');
                 
                 player = new PLAYER(game);
 
