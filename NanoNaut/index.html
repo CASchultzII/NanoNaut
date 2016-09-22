@@ -41,12 +41,13 @@
             var assets;
             var enemies;
             var player;
+            var resize = true;
 
             function preload() {
                 assets = new ASSETS(game);
                 assets.load_assets();
                 
-                game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+                game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
             }
             
             function create() {
@@ -66,8 +67,27 @@
             }
             
             function render() {
-                game.scale.setMinMax(0, 0, window.innerWidth, window.innerHeight);
+                if (resize) {
+                    var width = window.innerWidth;
+                    var height = window.innerHeight;
+                    
+                    var width_at_height = (height / 9 * 16) | 0;
+                    var height_at_width = (width / 16 * 9) | 0;
+                    
+                    if (width_at_height > width) {
+                        height = height_at_width;
+                    } else if (height_at_width > height) {
+                        width = width_at_height;
+                    }
+                    game.scale.setMinMax(0, 0, width, height);
+                    game.scale.refresh();
+                    resize = false;
+                }
             }
+            
+            window.onresize = function () {
+                resize = true;
+            };
         </script>
     </body>
 </html>
