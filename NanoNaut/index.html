@@ -8,7 +8,8 @@
         <script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script>
         <script src="scripts/utilities.js"></script>
         <script src="scripts/assets.js"></script>
-        <script src="scripts/asteroids.js"></script>
+        <script src="scripts/enemies/basic.js"></script>
+        <script src="scripts/enemies.js"></script>
         <script src="scripts/player.js"></script>
     </head>
     
@@ -17,7 +18,7 @@
             var game = new Phaser.Game(1280, 720, Phaser.AUTO, "game", {preload: preload, create: create, update: update, render: render});
             
             var assets;
-            var asteroids;
+            var enemies;
             var player;
 
             function preload() {
@@ -26,7 +27,7 @@
             }
             
             function create() {
-                game.renderer.clearBeforeRender = false;
+                game.renderer.clearBeforeRender = true;
                 game.renderer.roundPixels = true;
                 game.physics.startSystem(Phaser.Physics.ARCADE);
                 
@@ -34,14 +35,11 @@
                 
                 player = new PLAYER(game);
 
-                asteroids = new ASTEROIDS(game);
-                asteroids.create_group("LARGE", 10, "ASTEROID_1", 2, "MEDIUM");
-                asteroids.create_group("MEDIUM", 30, "ASTEROID_2", 1, "SMALL");
-                asteroids.create_group("SMALL", 90, "ASTEROID_3", 0.5);
+                enemies = new ENEMIES(game);
             }
                 
             function update() {
-            	asteroids.update(player, Math.random() < .1, "LARGE");
+            	enemies.update(player);
                 player.update();
             }
             
