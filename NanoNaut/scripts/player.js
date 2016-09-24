@@ -1,8 +1,9 @@
 // This script contains the PLAYER LOGIC!!
-
 var PLAYER = function(game) {
+    
     this.game = game;
-    this.player = this.game.add.sprite(300, 300, "SHIP");
+    var background = game.add.tileSprite(0, 0, 1280,720,'BACKGROUND');
+    this.player = this.game.add.sprite(300, 300, "SHIP"); 
     this.player.anchor.set(0.5);
     this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
     this.player.body.drag.set(100);
@@ -74,7 +75,7 @@ var PLAYER = function(game) {
     this.move_player = function() {
         if (this.input.up.isDown || this.invulnerable) { // if invulnerable, player is dashing
             this.game.physics.arcade.accelerationFromRotation(
-                    this.player.rotation, this.speedVal, this.player.body.acceleration);
+                this.player.rotation, this.speedVal, this.player.body.acceleration);
         } else {
             this.player.body.acceleration.set(0);
         }

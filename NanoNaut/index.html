@@ -11,6 +11,7 @@
         <script src="scripts/enemies/basic.js"></script>
         <script src="scripts/enemies.js"></script>
         <script src="scripts/player.js"></script>
+        <script src="scripts/menu.js"></script>
         
         <style>
             html {
@@ -41,10 +42,13 @@
             var assets;
             var enemies;
             var player;
+            var menu;
             var resize = true;
+            var hasGameStarted = false;
 
             function preload() {
                 assets = new ASSETS(game);
+                menu = new MENU(game);
                 assets.load_assets();
                 
                 game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
@@ -54,16 +58,26 @@
                 game.renderer.clearBeforeRender = true;
                 game.renderer.roundPixels = true;
                 game.physics.startSystem(Phaser.Physics.ARCADE);
+
+                this.input = this.game.input.keyboard.createCursorKeys();
+                this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
                 
-                var background = game.add.tileSprite(0, 0, 1280,720,'BACKGROUND');
-                
-                enemies = new ENEMIES(game);
                 player = new PLAYER(game);
+                enemies = new ENEMIES(game);
+
+                menu.LoadMenu();
             }
                 
             function update() {
-            	enemies.update(player);
+              if(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
+                hasGameStarted = true;
+                menu.changeBackground();
+              }
+
+              if(hasGameStarted == true){
+           	    enemies.update(player);
                 player.update();
+              }
             }
             
             function render() {

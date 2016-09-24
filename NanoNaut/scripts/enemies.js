@@ -29,7 +29,7 @@ var ENEMIES = function(game) {
                             triple.kill();
                             player.score += 30;
                         }
-                    } else {
+                    }else {
                         playerSprite.kill();
                     }
                 }, null, this

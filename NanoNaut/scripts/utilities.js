@@ -39,7 +39,6 @@ var UTILITIES = {
             var x = Math.random() * game.width;
             position = {x: x, y: y};
         }
-
         return position;
     },
 
@@ -49,5 +48,13 @@ var UTILITIES = {
     
     get_random_rotation: function() {
         return Math.random() * 100 - 50;
+    },
+
+    LOG: function (position,angle,speed){
+        console.log("Spawning Basic Single: ");
+            console.log("     Position: " + JSON.stringify(position));
+            console.log("     Angle:    " + angle);
+            console.log("     Speed:    " + speed);
+            console.log(""); // newline
     }
 };

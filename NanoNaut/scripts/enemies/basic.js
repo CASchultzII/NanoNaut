@@ -67,11 +67,8 @@ var Enemy_Basic = function(game) {
 
         if (single) {
             var angularV = UTILITIES.get_random_rotation();
-            console.log("Spawning Basic Single: ");
-            console.log("     Position: " + JSON.stringify(position));
-            console.log("     Angle:    " + angle);
-            console.log("     Speed:    " + speed);
-            console.log(""); // newline
+
+            UTILITIES.LOG(position,angle,speed);
 
             single.reset(position.x, position.y);
             this.game.physics.arcade.velocityFromAngle(angle, speed,
@@ -85,3 +82,4 @@ var Enemy_Basic = function(game) {
         }
     };
 }
+//Main 'holder' spriteplayer = game.add.sprite(0, 0, null);// Torsoplayer.torso = game.add.sprite(0, 0, 'player');player.torso.anchor.setTo(0.5);player.addChild(player.torso);// Pistolplayer.pistol = game.add.sprite(27, 21, 'pistol');player.pistol.anchor.setTo(0.15, 0.5);player.addChild(player.pistol);
