@@ -21,8 +21,10 @@ var PLAYER = function(game) {
     // Player Animations!!
     this.player.animations.add("IDLE", [0, 1, 2], 4);
     this.player.animations.add("DASH", [3, 4, 5], 4);
+    this.player.animations.add("KILL", [6, 7, 8, 9], 4);
     this.player.animations.play("IDLE", null, true);
     this.dashing = false;
+    this.dying = false;
     
     // Player can dash!
     this.targetVelocity = MAX_VELOCITY_IDLE;
@@ -63,6 +65,11 @@ var PLAYER = function(game) {
     this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
 
     this.update = function() {
+        if (this.dying) {
+            UTILITIES.screen_wrap(this.player, this.game);
+            return;
+        }
+        
         if (!this.player.alive) {
             this.gameOverText.text = "GAMEOVER";
 
@@ -70,6 +77,8 @@ var PLAYER = function(game) {
                 this.game.state.restart();
                 this.score = 0;
             }
+            
+            return;
         }
 
         this.dash(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR));
@@ -82,6 +91,16 @@ var PLAYER = function(game) {
         var scale = this.dashTime / MAX_DASH_TIME;
         this.dashBar.scale.setTo(scale > 0 ? scale : 0, 1);
     };
+    
+    this.kill = function() {
+        this.dying = true;
+        this.player.body.acceleration.set(0);
+        var kill = this.player.animations.play("KILL");
+        kill.onComplete.add(function() {
+            this.dying = false;
+            this.player.kill();
+        }, this);
+    }
 
     // INTERNALS
     this.move_player = function() {

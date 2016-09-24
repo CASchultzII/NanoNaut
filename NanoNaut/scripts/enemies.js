@@ -30,7 +30,7 @@ var ENEMIES = function(game) {
                             player.score += 30;
                         }
                     }else {
-                        playerSprite.kill();
+                        player.kill();
                     }
                 }, null, this
             );
