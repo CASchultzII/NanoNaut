@@ -3,11 +3,17 @@ var PLAYER = function(game) {
     
     this.game = game;
     var background = game.add.tileSprite(0, 0, 1280,720,'BACKGROUND');
-    this.player = this.game.add.sprite(300, 300, "SHIP"); 
+    this.player = this.game.add.sprite(300, 300, "SHIP");
     this.player.anchor.set(0.5);
     this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
     this.player.body.drag.set(100);
     this.player.body.maxVelocity.set(200);
+    
+    // Player Animations!!
+    this.player.animations.add("IDLE", [0, 1, 2], 4);
+    this.player.animations.add("DASH", [3, 4, 5], 4);
+    this.player.animations.play("IDLE", null, true);
+    this.dashing = false;
     
     // Player can dash!
     this.speedVal = 200;
@@ -17,12 +23,10 @@ var PLAYER = function(game) {
 
     // Player has a dash HUD!
     this.maxDashBar = this.game.add.sprite(950, 10, "BAR");
-    //this.maxDashBar.anchor.setTo(0, 1);
     this.maxDashBar.fixedToCamera = true;
     this.maxDashBar.tint = 0xFFD800;
     
     this.dashBar = this.game.add.sprite(950, 10, "BAR");
-    //this.dashBar.anchor.setTo(0, 1);
     this.dashBar.fixedToCamera = true;
     this.dashBar.tint = 0xFF3300;
 
@@ -91,8 +95,16 @@ var PLAYER = function(game) {
     
     this.dash = function(bool) {
         if (this.invulnerable) {
+            if (!this.dashing) {
+                this.dashing = true;
+                this.player.animations.play("DASH", null, true);
+            }
             this.dashTime -= this.game.time.now - this.lastClock;
         } else {
+            if (this.dashing) {
+                this.dashing = false;
+                this.player.animations.play("IDLE", null, true);
+            }
             if (this.dashTime < 1500) {
                 this.dashTime += this.game.time.now - this.lastClock;
                 if (this.dashTime > 1500) this.dashTime = 1500;
