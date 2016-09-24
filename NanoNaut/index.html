@@ -59,8 +59,7 @@
                 game.renderer.roundPixels = true;
                 game.physics.startSystem(Phaser.Physics.ARCADE);
 
-                this.input = this.game.input.keyboard.createCursorKeys();
-                this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
+                game.add.tileSprite(0, 0, 1280,720,'BACKGROUND');
                 
                 player = new PLAYER(game);
                 enemies = new ENEMIES(game);

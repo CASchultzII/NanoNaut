@@ -23,7 +23,7 @@ var ENEMIES = function(game) {
         // Collide with Basic_Triple enemies.
         this.game.physics.arcade.overlap(player.player, this.BASIC.TRIPLES,
                 function(playerSprite, triple) {
-                    if (player.invulnerable) {
+                    if (player.invulnerable()) {
                         if (!triple.invulnerable()) {
                             this.BASIC.degradeTriple(triple);
                             triple.kill();
@@ -38,7 +38,7 @@ var ENEMIES = function(game) {
         // Collide with Basic_Single enemies.
         this.game.physics.arcade.overlap(player.player, this.BASIC.SINGLES,
                 function(playerSprite, single) {
-                    if (player.invulnerable) {
+                    if (player.invulnerable()) {
                         if (!single.invulnerable()) {
                             single.kill();
                             player.score += 15;

@@ -1,13 +1,22 @@
 // This script contains the PLAYER LOGIC!!
 var PLAYER = function(game) {
     
+    // Constants:
+    var MAX_VELOCITY_IDLE = 300;
+    var MAX_VELOCITY_DASH = 800;
+    var DECELERATION = -450; // pixels / s^2
+    var INVULNERABLE_SPEED = 450;
+    var MAX_DASH_TIME = 500;
+    var COOLDOWN_MULTIPLIER = .2;
+    var MIN_DASH_POWER = .3;
+    
     this.game = game;
-    var background = game.add.tileSprite(0, 0, 1280,720,'BACKGROUND');
+    
     this.player = this.game.add.sprite(300, 300, "SHIP");
     this.player.anchor.set(0.5);
     this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
-    this.player.body.drag.set(100);
-    this.player.body.maxVelocity.set(200);
+    this.player.body.drag.set(200);
+    this.player.body.maxVelocity.set(MAX_VELOCITY_IDLE);
     
     // Player Animations!!
     this.player.animations.add("IDLE", [0, 1, 2], 4);
@@ -16,9 +25,8 @@ var PLAYER = function(game) {
     this.dashing = false;
     
     // Player can dash!
-    this.speedVal = 200;
-    this.invulnerable = false;
-    this.dashTime = 1500;
+    this.targetVelocity = MAX_VELOCITY_IDLE;
+    this.dashTime = MAX_DASH_TIME;
     this.lastClock = 0;
 
     // Player has a dash HUD!
@@ -64,61 +72,86 @@ var PLAYER = function(game) {
             }
         }
 
-        this.move_player();
         this.dash(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR));
+        this.move_player();
 
         UTILITIES.screen_wrap(this.player, this.game);
 
         this.scoreText.text = "Score: " + this.score;
 
-        var scale = this.dashTime / 1500;
+        var scale = this.dashTime / MAX_DASH_TIME;
         this.dashBar.scale.setTo(scale > 0 ? scale : 0, 1);
     };
 
     // INTERNALS
     this.move_player = function() {
-        if (this.input.up.isDown || this.invulnerable) { // if invulnerable, player is dashing
+        if (this.input.up.isDown) {
             this.game.physics.arcade.accelerationFromRotation(
-                this.player.rotation, this.speedVal, this.player.body.acceleration);
+                this.player.rotation, this.targetVelocity, this.player.body.acceleration);
+        } else if (this.dashing) { // divide by seconds required to get to target velocity
+            this.game.physics.arcade.accelerationFromRotation(
+                this.player.rotation, this.targetVelocity / .1, this.player.body.acceleration);
+        } else if (this.player.body.speed > MAX_VELOCITY_IDLE) { // We're not dashing, but we're going too fast
+            this.game.physics.arcade.accelerationFromRotation(
+                this.player.rotation, this.targetVelocity / .25, this.player.body.acceleration);
         } else {
             this.player.body.acceleration.set(0);
         }
 
         if (this.input.left.isDown) {
-            this.player.body.angularVelocity = -300;
+            this.player.body.angularVelocity = this.invulnerable() ? -100 : -300;
         } else if (this.input.right.isDown) {
-            this.player.body.angularVelocity = 300;
+            this.player.body.angularVelocity = this.invulnerable() ? 100 : 300;
         } else {
             this.player.body.angularVelocity = 0;
         }
     };
     
     this.dash = function(bool) {
-        if (this.invulnerable) {
-            if (!this.dashing) {
+        // To dash or not to dash....
+        if (bool) { // we want to dash
+            if (this.dashing) { // we're already dashing
+                this.dashTime -= this.game.time.now - this.lastClock;
+                if (this.dashTime < 0) this.dashTime = 0;
+            } else if (this.dashTime / MAX_DASH_TIME > MIN_DASH_POWER) { // we're not dashing
                 this.dashing = true;
-                this.player.animations.play("DASH", null, true);
+                this.player.body.speed = INVULNERABLE_SPEED;
             }
-            this.dashTime -= this.game.time.now - this.lastClock;
-        } else {
-            if (this.dashing) {
+        } else { // we shouldn't be dashing
+            if (this.dashing) { // we are dashing
                 this.dashing = false;
-                this.player.animations.play("IDLE", null, true);
-            }
-            if (this.dashTime < 1500) {
-                this.dashTime += this.game.time.now - this.lastClock;
-                if (this.dashTime > 1500) this.dashTime = 1500;
-            } else if (this.dashTime > 1500) {
-                this.dashTime = 1500;
+            } else { //we're not dashing
+                if (this.dashTime < MAX_DASH_TIME) {
+                    this.dashTime += (this.game.time.now - this.lastClock) * COOLDOWN_MULTIPLIER;
+                    if (this.dashTime > MAX_DASH_TIME) this.dashTime = MAX_DASH_TIME;
+                } else if (this.dashTime > MAX_DASH_TIME) {
+                    this.dashTime = MAX_DASH_TIME;
+                }
             }
         }
         
-        bool = bool && this.dashTime > 0;
+        // Adjust player targetVelocity incrementally
+        if (this.dashing && this.dashTime > 0) this.targetVelocity = MAX_VELOCITY_DASH;
+        else if (this.targetVelocity > MAX_VELOCITY_IDLE) {
+            this.targetVelocity += DECELERATION * ((this.game.time.now - this.lastClock) / 1000);
+            if (this.targetVelocity < MAX_VELOCITY_IDLE) this.targetVelocity = MAX_VELOCITY_IDLE;
+        }
+        this.player.body.maxVelocity.set(this.targetVelocity);
         
-        this.player.body.maxVelocity.set(bool ? 700 : 200);
-        this.speedVal = bool ? 700 : 200;
-        this.invulnerable = bool;
+        // Set correct animation based on speed!
+        var current = this.player.animations.currentAnim.name;
+        if (this.invulnerable()) { // Invulnerable?
+            if (current == "IDLE") { // Idle animation playing?
+                this.player.animations.play("DASH", null, true);
+            }
+        } else if (current == "DASH") { // Not invulnerable and dash animation playing
+            this.player.animations.play("IDLE", null, true);
+        }
         
         this.lastClock = this.game.time.now;
     };
+    
+    this.invulnerable = function() {
+        return this.player.body.speed >= INVULNERABLE_SPEED;
+    }
 }
