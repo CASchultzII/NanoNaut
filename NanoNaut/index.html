@@ -2,6 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        <meta name=viewport content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="HandheldFriendly" content="true">
         <title>NanoNaut - THE game</title>
         
         <!-- Use debug variant of phaser for now. -->
@@ -13,19 +15,23 @@
         <script src="scripts/player.js"></script>
         <script src="scripts/menu.js"></script>
         
+        <link rel="stylesheet" type="text/css" href="style.css">
         <style>
             html {
                 display: table;
                 height: 100%;
                 width: 100%;
+                padding: 0px;
+                margin: 0px;
+                -webkit-text-size-adjust: none
             }
         
             body {
                 display: table-cell;
                 vertical-align: middle;
                 background: #000000;
-                padding: 0;
-                margin: 0;
+                padding: 0px;
+                margin: 0px;
                 height: 100%;
             }
             
@@ -101,6 +107,9 @@
             window.onresize = function () {
                 resize = true;
             };
+            window.onload = function() {
+                resize = true;
+            }
         </script>
     </body>
 </html>
