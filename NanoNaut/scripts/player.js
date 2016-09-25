@@ -18,6 +18,11 @@ var PLAYER = function(game) {
     this.player.body.drag.set(200);
     this.player.body.maxVelocity.set(MAX_VELOCITY_IDLE);
     
+    // Dash Animation?!?
+    this.dashAnim = this.game.add.sprite(0, 0, "DASH");
+    this.dashAnim.anchor.set(.5 + 6/99, .5);
+    this.dashAnim.animations.add("DASH", [0, 1, 2], 4);
+    
     // Player Animations!!
     this.player.animations.add("IDLE", [0, 1, 2], 4);
     this.player.animations.add("DASH", [3, 4, 5], 4);
@@ -25,6 +30,7 @@ var PLAYER = function(game) {
     this.player.animations.play("IDLE", null, true);
     this.dashing = false;
     this.dying = false;
+    this.player.addChild(this.dashAnim);
     
     // Player can dash!
     this.targetVelocity = MAX_VELOCITY_IDLE;
@@ -81,8 +87,22 @@ var PLAYER = function(game) {
             return;
         }
 
-        this.dash(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR));
+        var oldDashing = this.dashing;
+        var shouldDash = this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR);
+        this.dash(shouldDash);
         this.move_player();
+        
+        if (shouldDash) { // should we dash
+            if (!oldDashing) { // were we not dashing?
+                this.dashAnim.animations.play("DASH", null, true);
+                this.dashAnim.visible = true;
+            }
+        } else {
+            if (oldDashing) {
+                this.dashAnim.animations.stop(null, true);
+                this.dashAnim.visible = false;
+            }
+        }
 
         UTILITIES.screen_wrap(this.player, this.game);
 
