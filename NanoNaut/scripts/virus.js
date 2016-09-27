@@ -65,8 +65,11 @@ var VIRUS = function(game) {
         
     }
     
-    // varERNALS
+    // INTERNALS
     this.merge = function(virusA, virusB, targetGroup) {
+        
+        if (virusA.dying || virusB.dying)
+            return; // do nothing
         
         var x = (virusA.position.x + virusB.position.x) / 2;
         var y = (virusA.position.y + virusB.position.y) / 2;
@@ -81,7 +84,7 @@ var VIRUS = function(game) {
     }
 }
 
-// varernal class
+// internal class
 
 var VirusGroup = function(game, num, count) {
 
@@ -97,6 +100,7 @@ var VirusGroup = function(game, num, count) {
         this.group.callAll("animations.add", "animations", "KILL", [5, 6, 7, 8, 9]);
     this.group.setAll("anchor.x", 0.5);
     this.group.setAll("anchor.y", 0.5);
+    this.group.setAll("dying", false);
     
     this.spawn = function(position, angle, speed) {
         var virus = this.group.getFirstExists(false);
