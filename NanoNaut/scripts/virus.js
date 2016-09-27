@@ -71,6 +71,9 @@ var VIRUS = function(game) {
         if (virusA.dying || virusB.dying)
             return; // do nothing
         
+        if (virusA.invulnerable() || virusB.invulnerable())
+            return; // do nothing
+        
         var x = (virusA.position.x + virusB.position.x) / 2;
         var y = (virusA.position.y + virusB.position.y) / 2;
         var position = {x: x, y: y};
@@ -124,7 +127,7 @@ var VirusGroup = function(game, num, count) {
     this.degrade = function(virus, virusGroups) {
         
         // get number of groups
-        var count = Math.floor(Math.random() * (this.num)) + 1;
+        var count = Math.floor(Math.random() * (this.num - 1)) + 2;
         
         // determine number of viri per cluster
         var newViri = []
