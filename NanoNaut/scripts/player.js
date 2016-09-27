@@ -37,23 +37,31 @@ var PLAYER = function(game) {
     this.dashTime = MAX_DASH_TIME;
     this.lastClock = 0;
 
-    // Player has a dash HUD!
-    this.maxDashBar = this.game.add.sprite(950, 10, "BAR");
+    this.maxDashBar = this.game.add.sprite(1120, 5, "BACKBAR"); //the black bar
     this.maxDashBar.fixedToCamera = true;
-    this.maxDashBar.tint = 0xFFD800;
     
-    this.dashBar = this.game.add.sprite(950, 10, "BAR");
+    this.dashBar = this.game.add.sprite(1120, 5, "MIDDLEBAR");    //the segmented bar
     this.dashBar.fixedToCamera = true;
-    this.dashBar.tint = 0xFF3300;
+
+    this.middleDashBar = this.game.add.sprite(1120, 5, "FRONTBAR");   //the white bar
+    this.middleDashBar.fixedToCamera = true;
+    this.middleDashBar.tint = 0xFF3300;
 
     // Player has score!
     this.score = 0;
-    this.scoreText = this.game.add.text(100, 30, "", {
-            font: "20px serif",
-            fill: "#ff0044",
-            align: "center"
-        });
-    this.scoreText.anchor.setTo(0.5, 0.5);
+    
+    this.scoreFont = this.game.add.retroFont("KNIGHT",  31, 25, Phaser.RetroFont.TEXT_SET6, 10, 1, 1);
+
+    this.scoreTextDisplay = this.game.add.image(750,43, this.scoreFont);
+    this.scoreTextDisplay.anchor.set(0.5,1);
+
+    this.scoreImage = this.game.add.image(620,30,"SCORE");
+    this.scoreImage.anchor.set(0.5);
+
+    this.scoreDisplayImage = this.game.add.image(300, 40, this.scoreText);  //this is the 'SCORE' text (black-white)image
+    this.scoreDisplayImage.anchor.set(0.5);
+
+    this.dashImage = this.game.add.image(980,15,"DASHIMAGE");   //this is the 'DASH' text (black-white) image
 
     // GAMEOVER
     this.gameOverText = this.game.add.retroFont("BLUEPINKFONT", 32, 32,
@@ -86,7 +94,6 @@ var PLAYER = function(game) {
                 this.game.state.restart();
                 this.score = 0;
             }
-            
             return;
         }
 
@@ -109,10 +116,24 @@ var PLAYER = function(game) {
 
         UTILITIES.screen_wrap(this.player, this.game);
 
-        this.scoreText.text = "Score: " + this.score;
+        this.scoreFont.text = ""+this.score;    //updating the score
 
         var scale = this.dashTime / MAX_DASH_TIME;
         this.dashBar.scale.setTo(scale > 0 ? scale : 0, 1);
+        
+        //this.dashBar.tint = Phaser.Color.interpolateColor(0x000000,0x00FF00, 100, this.dashBar.scale.x * 100, 0);
+        if(this.dashBar.scale.x < 0.3 ){
+            //red to black
+            this.dashBar.tint = Phaser.Color.interpolateColor(0x000000,0xFF0000, 100, this.dashBar.scale.x * 100, 0);
+            //this.dashBar.tint = 0x000000;       //go red
+        }else if (this.dashBar.scale.x < 0.6 ){
+            //yello to red
+            this.dashBar.tint = Phaser.Color.interpolateColor(0xFF0000,0xFFFF00, 100, this.dashBar.scale.x * 100, 0);;       //go yellow
+        }else{
+             //this.dashBar.tint = 0x00FF00;      //go green
+             //green to yellow
+             this.dashBar.tint = Phaser.Color.interpolateColor(0xFFFF00,0x00ff00, 100, this.dashBar.scale.x * 100, 0);;
+        }   
     };
     
     this.kill = function() {
