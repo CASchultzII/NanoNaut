@@ -23,5 +23,9 @@ var ASSETS = function(game) {
         this.game.load.image("BLUEPINKFONT", "assets/bluepinkfont.png");
         this.game.load.image("BAR", "assets/Bar.png");
         this.game.load.image("MENU", "assets/menu.png");
+        
+        // Audio
+        this.game.load.audio("SPLAT", ["assets/sounds/splat.mp3"]);
+        this.game.load.audio("EXPLOSION", ["assets/sounds/explosion.mp3"]);
     }
 }

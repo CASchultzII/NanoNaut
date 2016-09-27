@@ -69,6 +69,9 @@ var PLAYER = function(game) {
     // Player has controls!
     this.input = this.game.input.keyboard.createCursorKeys();
     this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
+    
+    // Player death?!?
+    this.deathFX = this.game.add.audio("EXPLOSION");
 
     this.update = function() {
         if (this.dying) {
@@ -113,13 +116,16 @@ var PLAYER = function(game) {
     };
     
     this.kill = function() {
-        this.dying = true;
-        this.player.body.acceleration.set(0);
-        var kill = this.player.animations.play("KILL");
-        kill.onComplete.add(function() {
-            this.dying = false;
-            this.player.kill();
-        }, this);
+        if (!this.dying) {
+            this.deathFX.play();
+            this.dying = true;
+            this.player.body.acceleration.set(0);
+            var kill = this.player.animations.play("KILL");
+            kill.onComplete.add(function() {
+                this.dying = false;
+                this.player.kill();
+            }, this);
+        }
     }
 
     // INTERNALS

@@ -8,6 +8,7 @@ var VIRUS = function(game) {
     for (var i = 0; i < 10; i++) {
         this.virusGroups[i] = new VirusGroup(game, i + 1, 50);
     }
+    this.splatFX = this.game.add.audio("SPLAT");
 
     this.update = function(player) {
         
@@ -55,6 +56,7 @@ var VIRUS = function(game) {
                             if (!virus.invulnerable()) {
                                 this.virusGroups[i].kill(virus, this.virusGroups);
                                 player.score += 10 * i;
+                                this.splatFX.play();
                             }
                         } else {
                             player.kill();
