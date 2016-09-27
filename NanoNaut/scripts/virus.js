@@ -14,6 +14,12 @@ var VIRUS = function(game) {
         //// Screenwrap everyone.
         for (var i = 0; i < 10; i++) {
             this.virusGroups[i].group.forEachExists(UTILITIES.screen_wrap, this, this.game);
+            // Perfom speed adjustments
+            this.virusGroups[i].group.forEachExists(function(virus) {
+                        this.game.physics.arcade.accelerationFromRotation(virus.body.rotation,
+                            100, virus.body.acceleration);
+                    }, this, this.game
+                );
         }
         
         //// SPAWNING!
