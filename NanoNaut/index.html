@@ -10,8 +10,7 @@
         <script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script>
         <script src="scripts/utilities.js"></script>
         <script src="scripts/assets.js"></script>
-        <script src="scripts/enemies/basic.js"></script>
-        <script src="scripts/enemies.js"></script>
+        <script src="scripts/virus.js"></script>
         <script src="scripts/player.js"></script>
         <script src="scripts/menu.js"></script>
         
@@ -46,7 +45,7 @@
             var game = new Phaser.Game(1280, 720, Phaser.AUTO, "game", {preload: preload, create: create, update: update, render: render});
             
             var assets;
-            var enemies;
+            var virus;
             var player;
             var menu;
             var resize = true;
@@ -67,8 +66,8 @@
 
                 game.add.tileSprite(0, 0, 1280,720,'BACKGROUND');
                 
+                virus = new VIRUS(game);
                 player = new PLAYER(game);
-                enemies = new ENEMIES(game);
 
                 menu.LoadMenu();
             }
@@ -80,7 +79,7 @@
               }
 
               if(hasGameStarted == true){
-           	    enemies.update(player);
+           	    virus.update(player);
                 player.update();
               }
             }
