@@ -12,7 +12,8 @@ var PLAYER = function(game) {
     
     this.game = game;
     
-    this.player = this.game.add.sprite(300, 300, "SHIP");
+    this.player = this.game.add.sprite(this.game.width / 2, this.game.height / 2, "SHIP");
+    this.player.angle = -90;
     this.player.anchor.set(0.5);
     this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
     this.player.body.drag.set(200);
