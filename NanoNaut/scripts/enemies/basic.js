@@ -82,4 +82,3 @@ var Enemy_Basic = function(game) {
         }
     };
 }
-//Main 'holder' spriteplayer = game.add.sprite(0, 0, null);// Torsoplayer.torso = game.add.sprite(0, 0, 'player');player.torso.anchor.setTo(0.5);player.addChild(player.torso);// Pistolplayer.pistol = game.add.sprite(27, 21, 'pistol');player.pistol.anchor.setTo(0.15, 0.5);player.addChild(player.pistol);
