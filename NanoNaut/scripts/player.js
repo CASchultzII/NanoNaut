@@ -25,9 +25,9 @@ var PLAYER = function(game) {
     this.dashAnim.animations.add("DASH", [0, 1, 2], 4);
     
     // Player Animations!!
-    this.player.animations.add("IDLE", [0, 1, 2], 4);
-    this.player.animations.add("DASH", [3, 4, 5], 4);
-    this.player.animations.add("KILL", [6, 7, 8, 9], 4);
+    this.player.animations.add("IDLE", [0, 1], 4);
+    this.player.animations.add("DASH", [2, 3], 4);
+    this.player.animations.add("KILL", [4, 5, 6, 7], 4);
     this.player.animations.play("IDLE", null, true);
     this.dashing = false;
     this.dying = false;
@@ -153,7 +153,7 @@ var PLAYER = function(game) {
         } else if (this.dashing) { // divide by seconds required to get to target velocity
             this.game.physics.arcade.accelerationFromRotation(
                 this.player.rotation, this.targetVelocity / .1, this.player.body.acceleration);
-        } else if (this.player.body.speed > MAX_VELOCITY_IDLE) { // We're not dashing, but we're going too fast
+        } else if (this.input.up.isDow && this.player.body.speed > MAX_VELOCITY_IDLE) { // We're not dashing, but we're going too fast
             this.game.physics.arcade.accelerationFromRotation(
                 this.player.rotation, this.targetVelocity / .25, this.player.body.acceleration);
         } else {
