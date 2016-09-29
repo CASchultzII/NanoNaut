@@ -3,6 +3,9 @@
 
 var VIRUS = function(game) {
 
+	this.hasPlayerCollided = false;
+	this.hasExectued = false;
+
     this.game = game;
     this.virusGroups = [];
     for (var i = 0; i < 10; i++) {
@@ -12,6 +15,8 @@ var VIRUS = function(game) {
 
     this.update = function(player) {
         
+		
+
         //// Screenwrap everyone.
         for (var i = 0; i < 10; i++) {
             this.virusGroups[i].group.forEachExists(UTILITIES.screen_wrap, this, this.game);
@@ -37,7 +42,6 @@ var VIRUS = function(game) {
         for (var i = 0; i < 10; i++) {
             for (var j = i; j < 10; j++) {
                 var targetGroup = j + i + 2;
-                
                 var handler = null;
                 if (targetGroup <= 10) {
                     handler = function(virusA, virusB) {
@@ -59,12 +63,11 @@ var VIRUS = function(game) {
                                 this.splatFX.play();
                             }
                         } else {
-                            player.kill();
+                            player.HealthUpdate();
                         }
                     }, null, this
                 );
-        }
-        
+        }        
     }
     
     // INTERNALS
