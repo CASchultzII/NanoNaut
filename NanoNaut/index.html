@@ -8,6 +8,7 @@
         
         <!-- Use debug variant of phaser for now. -->
         <script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script>
+        <script src="scripts/constants.js"></script>
         <script src="scripts/utilities.js"></script>
         <script src="scripts/assets.js"></script>
         <script src="scripts/virus.js"></script>
@@ -100,6 +101,17 @@
                     game.scale.setMinMax(0, 0, width, height);
                     game.scale.refresh();
                     resize = false;
+                }
+                
+                if (CONSTANTS.debug) {
+                    game.debug.body(player.player);
+                    
+                    var render = function(member) {
+                        game.debug.body(member);
+                    }
+                    for (var i = 0; i < 10; i++) {
+                        virus.virusGroups[i].group.forEachAlive(render, this);
+                    }
                 }
             }
             
