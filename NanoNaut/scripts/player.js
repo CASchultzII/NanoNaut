@@ -30,6 +30,7 @@ var PLAYER = function(game) {
     this.dashAnim = this.game.add.sprite(0, 0, "DASH");
     this.dashAnim.anchor.set(.5 + 6/99, .5);
     this.dashAnim.animations.add("DASH", [0, 1, 2], 4);
+    this.dashAnim.visible = false;
     
     // Player Animations!!
     this.player.animations.add("IDLE", [0, 1], 4);

@@ -70,16 +70,20 @@
                 virus = new VIRUS(game);
                 player = new PLAYER(game);
 
-                menu.LoadMenu();
+                if(!hasGameStarted){
+                	menu.LoadMenu();
+                }
             }
                 
             function update() {
-              if(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-                hasGameStarted = true;
-                menu.changeBackground();
-              }
+            	if (!hasGameStarted) {
+              		if(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
+                		hasGameStarted = true;
+                		menu.changeBackground();
+            		}
+          		}
 
-              if(hasGameStarted == true){
+              if(hasGameStarted){
            	    virus.update(player);
                 player.update();
               }
