@@ -158,7 +158,7 @@ var PLAYER = function(game) {
         } else if (this.dashing) { // divide by seconds required to get to target velocity
             this.game.physics.arcade.accelerationFromRotation(
                 this.player.rotation, this.targetVelocity / .1, this.player.body.acceleration);
-        } else if (this.player.body.speed > MAX_VELOCITY_IDLE) { // We're not dashing, but we're going too fast
+        } else if (this.input.up.isDow && this.player.body.speed > MAX_VELOCITY_IDLE) { // We're not dashing, but we're going too fast
             this.game.physics.arcade.accelerationFromRotation(
                 this.player.rotation, this.targetVelocity / .25, this.player.body.acceleration);
         } else {
