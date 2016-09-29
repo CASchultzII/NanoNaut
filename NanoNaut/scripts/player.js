@@ -17,7 +17,6 @@ var PLAYER = function(game) {
     var HIT_COOLDOWN = CONSTANTS.PLAYER.HIT_COOLDOWN;
     
     this.game = game;
-    
     this.player = this.game.add.sprite(this.game.width / 2, this.game.height / 2, "SHIP");
     this.player.angle = -90;
     this.player.anchor.set(0.5);
@@ -54,6 +53,11 @@ var PLAYER = function(game) {
     this.middleDashBar.fixedToCamera = true;
     this.middleDashBar.tint = 0xFF3300;
 
+    //health bar
+    this.totalHealth = 0;   //increment this always
+    this.lastHit = 0;
+    this.healthbar = this.game.add.sprite(10,10,'HEALTHBAR');
+    
     // Player has score!
     this.score = 0;
     
@@ -70,17 +74,6 @@ var PLAYER = function(game) {
 
     this.dashImage = this.game.add.image(980,15,"DASHIMAGE");   //this is the 'DASH' text (black-white) image
 
-    // GAMEOVER
-    this.gameOverText = this.game.add.retroFont("BLUEPINKFONT", 32, 32,
-            Phaser.RetroFont.TEXT_SET2, 10);
-    this.gameOverText.text = "";
-    this.gameOverImage = this.game.add.image(this.game.world.centerX,
-            this.game.world.centerY, this.gameOverText);
-    this.gameOverImage.anchor.set(0.5);
-    this.game.time.events.loop(Phaser.Timer.SECOND * 2, function() {
-            this.gameOverImage.tint = Math.random() * 0xFFFFFF;
-        }, this);
-
     // Player has controls!
     this.input = this.game.input.keyboard.createCursorKeys();
     this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
@@ -95,8 +88,8 @@ var PLAYER = function(game) {
         }
         
         if (!this.player.alive) {
-            this.gameOverText.text = "GAMEOVER";
-
+            this.gameOverUpdatedImage = this.game.add.image(this.game.world.centerX - 110,   
+            this.game.world.centerY,"GAMEOVERIMAGE");
             if (this.input.down.isDown) {
                 this.game.state.restart();
                 this.score = 0;
@@ -124,6 +117,7 @@ var PLAYER = function(game) {
         UTILITIES.screen_wrap(this.player, this.game);
 
         this.scoreFont.text = ""+this.score;    //updating the score
+        this.healthbar.frame = this.totalHealth; //update the health bar (change this.totalHealth)
 
         var scale = this.dashTime / MAX_DASH_TIME;
         this.dashBar.scale.setTo(scale > 0 ? scale : 0, 1);
@@ -140,7 +134,7 @@ var PLAYER = function(game) {
              //this.dashBar.tint = 0x00FF00;      //go green
              //green to yellow
              this.dashBar.tint = Phaser.Color.interpolateColor(0xFFFF00,0x00ff00, 100, this.dashBar.scale.x * 100, 0);;
-        }   
+        }  
     };
     
     this.kill = function() {
@@ -226,5 +220,17 @@ var PLAYER = function(game) {
     
     this.invulnerable = function() {
         return this.player.body.speed >= INVULNERABLE_SPEED;
+    }
+
+    this.HealthUpdate = function(){
+        if(this.game.time.now - this.lastHit > HIT_COOLDOWN) {
+            this.lastHit = this.game.time.now;
+            if (this.totalHealth < 4) {
+                this.totalHealth = this.totalHealth + 1;
+            } else {
+                this.healthbar.destroy();
+                this.kill();
+            }
+        }
     }
 }
