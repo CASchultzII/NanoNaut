@@ -119,7 +119,7 @@ var VirusGroup = function(game, num, count, hitbox) {
     this.group.setAll("anchor.y", 0.5);
     this.group.setAll("dying", false);
     if (this.hitbox.isCircle) {
-        //this.group.callAll("body.setCircle", "body", hitbox.radius, hitbox.offsets[0], hitbox.offsets[1]);
+        this.group.callAll("body.setCircle", "body", hitbox.radius, hitbox.offsets[0], hitbox.offsets[1]);
     } else {
         this.group.callAll("body.setSize", "body", hitbox.dim[0], hitbox.dim[1], hitbox.offsets[0], hitbox.offsets[1]);
     }

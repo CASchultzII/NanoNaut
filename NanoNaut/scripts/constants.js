@@ -19,7 +19,7 @@ var CONSTANTS = {
         "OMEGA_DASH": 100,
         
         // Dash Variables
-        "MAX_DASH_TIME": 500,
+        "MAX_DASH_TIME": 750,
         "COOLDOWN_MULTIPLIER": .2,
         "MIN_DASH_POWER": .3,
         
@@ -36,12 +36,12 @@ var CONSTANTS = {
     
     "VIRUS": {
         // SPAWNING
-        "SPAWN_RATE": .01,
-        "SPEED": 75,
+        "SPAWN_RATE": .005,
+        "SPEED": 70,
         "INVULNERABLE_TIME": 500,
         
         // Continuous momentum
-        "TARGET_SPEED": 100,
+        "TARGET_SPEED": 110,
         
         // Scoring
         "BASE_SCORE": 10,
@@ -49,55 +49,55 @@ var CONSTANTS = {
         // HITBOXES
         "HITBOXES": [
             {
-                "isCircle": true,
-                "offsets": [(64 / 2 - 25) | 0, ( 62 / 2 - 25) | 0],
-                "radius": 25
+                "isCircle": false,
+                "offsets": [(64 - 40) / 2, (62 - 40) / 2],
+                "dim": [40, 40]
             },
             {
-                "isCircle": true,
-                "offsets": [(107 / 2 - 27) | 0, ( 55 / 2 - 27) | 0],
-                "radius": 27
+                "isCircle": false,
+                "offsets": [(107 - 50) / 2, (55 - 50) / 2],
+                "dim": [50, 50]
             },
             {
-                "isCircle": true,
-                "offsets": [((112 / 2 - 35) | 0) | 0, ( ( 94 / 2 - 35) | 0) | 0],
-                "radius": 35
+                "isCircle": false,
+                "offsets": [(112 - 80) / 2, (94 - 80) / 2],
+                "dim": [80, 80]
             },
             {
-                "isCircle": true,
-                "offsets": [((103 / 2 - 50) | 0) | 0, ( ( 106 / 2 - 50) | 0) | 0],
-                "radius": 50
+                "isCircle": false,
+                "offsets": [(103 - 95) / 2, (106 - 95) / 2],
+                "dim": [95, 95]
             },
             {
-                "isCircle": true,
-                "offsets": [((131 /2 - 50) | 0) | 0, ( ( 114 / 2 - 50) | 0) | 0],
-                "radius": 50
+                "isCircle": false,
+                "offsets": [(131 - 110) / 2, (114 - 110) / 2],
+                "dim": [110, 110]
             },
             {
-                "isCircle": true,
-                "offsets": [((134 / 2 - 55) | 0) | 0, ( ( 118 / 2 - 55) | 0) | 0],
-                "radius": 55
+                "isCircle": false,
+                "offsets": [(134 - 100) / 2, (118 - 100) / 2],
+                "dim": [100, 100]
             },
             {
-                "isCircle": true,
-                "offsets": [(134 / 2 - 60) | 0, ( 146 / 2 - 60) | 0],
-                "radius": 60
+                "isCircle": false,
+                "offsets": [(134 - 130) / 2, (146 - 130) / 2],
+                "dim": [130, 130]
             },
             {
-                "isCircle": true,
-                "offsets": [(159 / 2 - 60) | 0, ( 137 / 2 - 60) | 0],
-                "radius": 60
+                "isCircle": false,
+                "offsets": [(159 - 120) / 2, (137 - 120) / 2],
+                "dim": [120, 120]
             },
             {
-                "isCircle": true,
-                "offsets": [(150 / 2 - 70) | 0, ( 172 / 2 - 70) | 0],
-                "radius": 70
+                "isCircle": false,
+                "offsets": [(150 - 145) / 2, (172 - 145) / 2],
+                "dim": [145, 145]
             },
             {
-                "isCircle": true,
-                "offsets": [(173 / 2 - 80) | 0, ( 170 / 2 - 80) | 0],
-                "radius": 80
-            }
+                "isCircle": false,
+                "offsets": [(173 - 160) / 2, (170 - 160) / 2],
+                "dim": [160, 160]
+            },
         ]
     }
 }
