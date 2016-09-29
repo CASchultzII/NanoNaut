@@ -51,6 +51,7 @@
             var menu;
             var resize = true;
             var hasGameStarted = false;
+            var background;
 
             function preload() {
                 assets = new ASSETS(game);
@@ -73,6 +74,9 @@
                 if(!hasGameStarted){
                 	menu.LoadMenu();
                 }
+                
+                background = game.add.audio("TITLE_THEME");
+                background.play('', 0, 1, true);
             }
                 
             function update() {
@@ -80,6 +84,7 @@
               		if(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
                 		hasGameStarted = true;
                 		menu.changeBackground();
+                        background.stop();
             		}
           		}
 

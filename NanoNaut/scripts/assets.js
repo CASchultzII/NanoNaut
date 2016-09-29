@@ -38,5 +38,6 @@ var ASSETS = function(game) {
         // Audio
         this.game.load.audio("SPLAT", ["assets/sounds/splat.mp3"]);
         this.game.load.audio("EXPLOSION", ["assets/sounds/explosion.mp3"]);
+        this.game.load.audio("TITLE_THEME", ["assets/sounds/title.ogg"]);
     }
 }
