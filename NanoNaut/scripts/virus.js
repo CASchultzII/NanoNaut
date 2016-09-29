@@ -2,6 +2,12 @@
 // the player shall defeat.
 
 var VIRUS = function(game) {
+    
+    var SPAWN_RATE = CONSTANTS.VIRUS.SPAWN_RATE;
+    var SPEED = CONSTANTS.VIRUS.SPEED;
+    var TARGET_SPEED = CONSTANTS.VIRUS.TARGET_SPEED;
+    var BASE_SCORE = CONSTANTS.VIRUS.BASE_SCORE;
+    var HITBOXES = CONSTANTS.VIRUS.HITBOXES;
 
 	this.hasPlayerCollided = false;
 	this.hasExectued = false;
@@ -9,7 +15,7 @@ var VIRUS = function(game) {
     this.game = game;
     this.virusGroups = [];
     for (var i = 0; i < 10; i++) {
-        this.virusGroups[i] = new VirusGroup(game, i + 1, 50);
+        this.virusGroups[i] = new VirusGroup(game, i + 1, 50, HITBOXES[i]);
     }
     this.splatFX = this.game.add.audio("SPLAT");
 
@@ -23,16 +29,16 @@ var VIRUS = function(game) {
             // Perfom speed adjustments
             this.virusGroups[i].group.forEachExists(function(virus) {
                         this.game.physics.arcade.accelerationFromRotation(virus.body.rotation,
-                            100, virus.body.acceleration);
+                            TARGET_SPEED, virus.body.acceleration);
                     }, this, this.game
                 );
         }
         
         //// SPAWNING!
-        if (Math.random() < .0025) {
+        if (Math.random() < SPAWN_RATE) {
             var position = UTILITIES.get_random_spawn(this.game);
             var angle = UTILITIES.get_random_angle();
-            var speed = 75;
+            var speed = SPEED;
             
             var group = Math.floor(Math.random() * 10);
             this.virusGroups[group].spawn(position, angle, speed);
@@ -59,7 +65,7 @@ var VIRUS = function(game) {
                         if (player.invulnerable()) {
                             if (!virus.invulnerable()) {
                                 this.virusGroups[i].kill(virus, this.virusGroups);
-                                player.score += 10 * i;
+                                player.score += BASE_SCORE * i;
                                 this.splatFX.play();
                             }
                         } else {
@@ -94,10 +100,13 @@ var VIRUS = function(game) {
 
 // internal class
 
-var VirusGroup = function(game, num, count) {
+var VirusGroup = function(game, num, count, hitbox) {
+    
+    var INVULNERABLE_TIME = CONSTANTS.VIRUS.INVULNERABLE_TIME;
 
     this.game = game;
     this.num = num;
+    this.hitbox = hitbox;
     this.group = this.game.add.group();
     this.group.name = "VIRUS_" + this.num;
     this.group.enableBody = true;
@@ -109,6 +118,11 @@ var VirusGroup = function(game, num, count) {
     this.group.setAll("anchor.x", 0.5);
     this.group.setAll("anchor.y", 0.5);
     this.group.setAll("dying", false);
+    if (this.hitbox.isCircle) {
+        //this.group.callAll("body.setCircle", "body", hitbox.radius, hitbox.offsets[0], hitbox.offsets[1]);
+    } else {
+        this.group.callAll("body.setSize", "body", hitbox.dim[0], hitbox.dim[1], hitbox.offsets[0], hitbox.offsets[1]);
+    }
     
     this.spawn = function(position, angle, speed) {
         var virus = this.group.getFirstExists(false);
@@ -122,7 +136,7 @@ var VirusGroup = function(game, num, count) {
             
             var time = this.game.time.now;
             virus.invulnerable = function() {
-                return this.game.time.now < time + 500;
+                return this.game.time.now < time + INVULNERABLE_TIME;
             };
             
             virus.animations.play("MOVE", 4, true);

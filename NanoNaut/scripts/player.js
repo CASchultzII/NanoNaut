@@ -15,6 +15,7 @@ var PLAYER = function(game) {
     var MIN_DASH_POWER = CONSTANTS.PLAYER.MIN_DASH_POWER;
     var DRAG = CONSTANTS.PLAYER.DRAG;
     var HIT_COOLDOWN = CONSTANTS.PLAYER.HIT_COOLDOWN;
+    var HITBOX = CONSTANTS.PLAYER.HITBOX;
     
     this.game = game;
     this.player = this.game.add.sprite(this.game.width / 2, this.game.height / 2, "SHIP");
@@ -23,6 +24,7 @@ var PLAYER = function(game) {
     this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
     this.player.body.drag.set(DRAG);
     this.player.body.maxVelocity.set(MAX_VELOCITY_IDLE);
+    this.player.body.setCircle(HITBOX.radius, HITBOX.offsets[0], HITBOX.offsets[1]);
     
     // Dash Animation?!?
     this.dashAnim = this.game.add.sprite(0, 0, "DASH");

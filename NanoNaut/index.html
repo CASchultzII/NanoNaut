@@ -102,6 +102,17 @@
                     game.scale.refresh();
                     resize = false;
                 }
+                
+                if (CONSTANTS.debug) {
+                    game.debug.body(player.player);
+                    
+                    var render = function(member) {
+                        game.debug.body(member);
+                    }
+                    for (var i = 0; i < 10; i++) {
+                        virus.virusGroups[i].group.forEachAlive(render, this);
+                    }
+                }
             }
             
             window.onresize = function () {
