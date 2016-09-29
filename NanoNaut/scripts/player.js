@@ -51,6 +51,7 @@ var PLAYER = function(game) {
     //health bar
     this.totalHealth = 0;   //increment this always
     this.lastHit = 0;
+    this.hasPlayerCollided = false;
     this.healthbar = this.game.add.sprite(10,10,'HEALTHBAR');
     
     // Player has score!
@@ -130,6 +131,12 @@ var PLAYER = function(game) {
              //green to yellow
              this.dashBar.tint = Phaser.Color.interpolateColor(0xFFFF00,0x00ff00, 100, this.dashBar.scale.x * 100, 0);;
         }  
+
+        if(this.game.time.now - this.lastHit > HIT_COOLDOWN){   //player tints when it loses a life
+            this.player.tint = 0xFFFFFF; 
+        }else{
+            this.player.tint = 0xFF6666; 
+        }
     };
     
     this.kill = function() {
