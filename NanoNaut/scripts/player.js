@@ -2,13 +2,19 @@
 var PLAYER = function(game) {
     
     // Constants:
-    var MAX_VELOCITY_IDLE = 300;
-    var MAX_VELOCITY_DASH = 800;
-    var DECELERATION = -450; // pixels / s^2
-    var INVULNERABLE_SPEED = 450;
-    var MAX_DASH_TIME = 500;
-    var COOLDOWN_MULTIPLIER = .2;
-    var MIN_DASH_POWER = .3;
+    var MAX_VELOCITY_IDLE = CONSTANTS.PLAYER.MAX_VELOCITY_IDLE;
+    var MAX_VELOCITY_DASH = CONSTANTS.PLAYER.MAX_VELOCITY_DASH;
+    var INVULNERABLE_SPEED = CONSTANTS.PLAYER.INVULNERABLE_SPEED;
+    var DECELERATION = CONSTANTS.PLAYER.DECELERATION;
+    var DASH_DECEL = CONSTANTS.PLAYER.DASH_DECEL;
+    var AFTER_DECEL = CONSTANTS.PLAYER.AFTER_DECEL;
+    var OMEGA_IDLE = CONSTANTS.PLAYER.OMEGA_IDLE;
+    var OMEGA_DASH = CONSTANTS.PLAYER.OMEGA_DASH;
+    var MAX_DASH_TIME = CONSTANTS.PLAYER.MAX_DASH_TIME;
+    var COOLDOWN_MULTIPLIER = CONSTANTS.PLAYER.COOLDOWN_MULTIPLIER;
+    var MIN_DASH_POWER = CONSTANTS.PLAYER.MIN_DASH_POWER;
+    var DRAG = CONSTANTS.PLAYER.DRAG;
+    var HIT_COOLDOWN = CONSTANTS.PLAYER.HIT_COOLDOWN;
     
     this.game = game;
     
@@ -16,7 +22,7 @@ var PLAYER = function(game) {
     this.player.angle = -90;
     this.player.anchor.set(0.5);
     this.game.physics.enable(this.player, Phaser.Physics.ARCADE);
-    this.player.body.drag.set(200);
+    this.player.body.drag.set(DRAG);
     this.player.body.maxVelocity.set(MAX_VELOCITY_IDLE);
     
     // Dash Animation?!?
@@ -157,18 +163,18 @@ var PLAYER = function(game) {
                 this.player.rotation, this.targetVelocity, this.player.body.acceleration);
         } else if (this.dashing) { // divide by seconds required to get to target velocity
             this.game.physics.arcade.accelerationFromRotation(
-                this.player.rotation, this.targetVelocity / .1, this.player.body.acceleration);
+                this.player.rotation, this.targetVelocity / DASH_DECEL, this.player.body.acceleration);
         } else if (this.input.up.isDow && this.player.body.speed > MAX_VELOCITY_IDLE) { // We're not dashing, but we're going too fast
             this.game.physics.arcade.accelerationFromRotation(
-                this.player.rotation, this.targetVelocity / .25, this.player.body.acceleration);
+                this.player.rotation, this.targetVelocity / AFTER_DECEL, this.player.body.acceleration);
         } else {
             this.player.body.acceleration.set(0);
         }
 
         if (this.input.left.isDown) {
-            this.player.body.angularVelocity = this.invulnerable() ? -100 : -300;
+            this.player.body.angularVelocity = this.invulnerable() ? -OMEGA_DASH : -OMEGA_IDLE;
         } else if (this.input.right.isDown) {
-            this.player.body.angularVelocity = this.invulnerable() ? 100 : 300;
+            this.player.body.angularVelocity = this.invulnerable() ? OMEGA_DASH : OMEGA_IDLE;
         } else {
             this.player.body.angularVelocity = 0;
         }
