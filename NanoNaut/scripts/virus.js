@@ -147,22 +147,11 @@ var VirusGroup = function(game, num, count, hitbox) {
         
         // get number of groups
         var count = Math.floor(Math.random() * (this.num - 1)) + 2;
-        var dec = 0;
-        if (this.num <= 3) {
-            dec = 1;
-        } else if (this.num <= 6) {
-            dec = 2
-        } else {
-            dec = 3;
-        }
-        if (Math.random() > .25) {
-            dec = 0;
-        }
         
         // determine number of viri per cluster
         var newViri = []
         for (var i = 0; i < count; i++) newViri[i] = 0;
-        for (var i = 0; i < this.num - dec; i++) {
+        for (var i = 0; i < this.num; i++) {
             newViri[i % count]++;
         }
         
@@ -170,8 +159,6 @@ var VirusGroup = function(game, num, count, hitbox) {
         var angle = Math.random() * 360;
         var step = 360 / count;
         for (var i = 0; i < count; i++) {
-            if (newViri[i] - 1 < 1) // odd bug...
-                break;
             virusGroups[newViri[i] - 1].spawn(virus.body.position, angle, virus.body.speed * 1.5);
             angle += step;
         }

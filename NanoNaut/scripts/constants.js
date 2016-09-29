@@ -19,10 +19,10 @@ var CONSTANTS = {
         "OMEGA_DASH": 100,
         
         // Dash Variables
-        "MAX_DASH_TIME": 750,
-        "COOLDOWN_MULTIPLIER": .15,
+        "MAX_DASH_TIME": 1000,
+        "COOLDOWN_MULTIPLIER": .25,
         "MIN_DASH_POWER": .3,
-        "DASH_DEDUCT": 100,
+        "DASH_DEDUCT": 150,
         
         // Other Physics Variables
         "DRAG": 200,
@@ -37,12 +37,12 @@ var CONSTANTS = {
     
     "VIRUS": {
         // SPAWNING
-        "SPAWN_RATE": .005,
+        "SPAWN_RATE": .003,
         "SPEED": 70,
         "INVULNERABLE_TIME": 500,
         
         // Continuous momentum
-        "TARGET_SPEED": 110,
+        "TARGET_SPEED": 90,
         
         // Scoring
         "BASE_SCORE": 10,
