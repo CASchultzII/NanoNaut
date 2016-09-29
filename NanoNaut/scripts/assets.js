@@ -5,7 +5,7 @@ var ASSETS = function(game) {
     this.game = game;
 
     this.load_assets = function() {
-        this.game.load.spritesheet("SHIP", "assets/player/ship.png", 74, 74, 10);
+        this.game.load.spritesheet("SHIP", "assets/player/ship.png", 74, 74, 8);
         this.game.load.spritesheet("DASH", "assets/player/bubbles.png", 99, 68, 4);
         
         this.game.load.spritesheet("VIRUS_1",  "assets/enemies/virus-1.png", 64, 62, 10);

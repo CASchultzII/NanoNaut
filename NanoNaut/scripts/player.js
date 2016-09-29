@@ -25,9 +25,9 @@ var PLAYER = function(game) {
     this.dashAnim.animations.add("DASH", [0, 1, 2], 4);
     
     // Player Animations!!
-    this.player.animations.add("IDLE", [0, 1, 2], 4);
-    this.player.animations.add("DASH", [3, 4, 5], 4);
-    this.player.animations.add("KILL", [6, 7, 8, 9], 4);
+    this.player.animations.add("IDLE", [0, 1], 4);
+    this.player.animations.add("DASH", [2, 3], 4);
+    this.player.animations.add("KILL", [4, 5, 6, 7], 4);
     this.player.animations.play("IDLE", null, true);
     this.dashing = false;
     this.dying = false;
