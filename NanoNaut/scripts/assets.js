@@ -35,6 +35,18 @@ var ASSETS = function(game) {
         this.game.load.image("SCORE", "assets/score.png");
         this.game.load.image("DASHIMAGE", "assets/dash.png");
         
+        // CONTROLS
+        this.game.load.image("DOWN_R", "assets/ui/DownReleased.png");
+        this.game.load.image("DOWN_P", "assets/ui/DownPressed.png");
+        this.game.load.image("UP_R", "assets/ui/UpReleased.png");
+        this.game.load.image("UP_P", "assets/ui/UpPressed.png");
+        this.game.load.image("LEFT_R", "assets/ui/LeftReleased.png");
+        this.game.load.image("LEFT_P", "assets/ui/LeftPressed.png");
+        this.game.load.image("RIGHT_R", "assets/ui/RightReleased.png");
+        this.game.load.image("RIGHT_P", "assets/ui/RightPressed.png");
+        this.game.load.image("SPACE_R", "assets/ui/SpaceReleased.png");
+        this.game.load.image("SPACE_P", "assets/ui/SpacePressed.png");
+        
         // Audio
         this.game.load.audio("SPLAT", ["assets/sounds/splat.mp3"]);
         this.game.load.audio("EXPLOSION", ["assets/sounds/explosion.mp3"]);

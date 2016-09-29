@@ -13,6 +13,7 @@ var PLAYER = function(game) {
     var MAX_DASH_TIME = CONSTANTS.PLAYER.MAX_DASH_TIME;
     var COOLDOWN_MULTIPLIER = CONSTANTS.PLAYER.COOLDOWN_MULTIPLIER;
     var MIN_DASH_POWER = CONSTANTS.PLAYER.MIN_DASH_POWER;
+    var DASH_DEDUCT = CONSTANTS.PLAYER.DASH_DEDUCT;
     var DRAG = CONSTANTS.PLAYER.DRAG;
     var HIT_COOLDOWN = CONSTANTS.PLAYER.HIT_COOLDOWN;
     var HITBOX = CONSTANTS.PLAYER.HITBOX;
@@ -79,8 +80,23 @@ var PLAYER = function(game) {
     this.dashImage = this.game.add.image(980,15,"DASHIMAGE");   //this is the 'DASH' text (black-white) image
 
     // Player has controls!
-    this.input = this.game.input.keyboard.createCursorKeys();
+    this.inputKeys = this.game.input.keyboard.createCursorKeys();
     this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
+    this.input = function(str) {
+        switch(str) {
+            case "UP":
+                return this.inputKeys.up.isDown;
+            case "DOWN":
+                return this.inputKeys.down.isDown;
+            case "LEFT":
+                return this.inputKeys.left.isDown;
+            case "RIGHT":
+                return this.inputKeys.right.isDown;
+        }
+    }
+    this.spacePressed = function() {
+        return this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR);
+    }
     
     // Player death?!?
     this.deathFX = this.game.add.audio("EXPLOSION");
@@ -94,7 +110,7 @@ var PLAYER = function(game) {
         if (!this.player.alive) {
             this.gameOverUpdatedImage = this.game.add.image(this.game.world.centerX - 110,   
             this.game.world.centerY,"GAMEOVERIMAGE");
-            if (this.input.down.isDown) {
+            if (this.input("DOWN")) {
                 this.game.state.restart();
                 this.score = 0;
             }
@@ -102,7 +118,7 @@ var PLAYER = function(game) {
         }
 
         var oldDashing = this.dashing;
-        var shouldDash = this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR);
+        var shouldDash = this.spacePressed();
         this.dash(shouldDash);
         this.move_player();
         
@@ -162,22 +178,22 @@ var PLAYER = function(game) {
 
     // INTERNALS
     this.move_player = function() {
-        if (this.input.up.isDown) {
+        if (this.input("UP")) {
             this.game.physics.arcade.accelerationFromRotation(
                 this.player.rotation, this.targetVelocity, this.player.body.acceleration);
         } else if (this.dashing) { // divide by seconds required to get to target velocity
             this.game.physics.arcade.accelerationFromRotation(
                 this.player.rotation, this.targetVelocity / DASH_DECEL, this.player.body.acceleration);
-        } else if (this.input.up.isDow && this.player.body.speed > MAX_VELOCITY_IDLE) { // We're not dashing, but we're going too fast
+        } else if (this.input("UP") && this.player.body.speed > MAX_VELOCITY_IDLE) { // We're not dashing, but we're going too fast
             this.game.physics.arcade.accelerationFromRotation(
                 this.player.rotation, this.targetVelocity / AFTER_DECEL, this.player.body.acceleration);
         } else {
             this.player.body.acceleration.set(0);
         }
 
-        if (this.input.left.isDown) {
+        if (this.input("LEFT")) {
             this.player.body.angularVelocity = this.invulnerable() ? -OMEGA_DASH : -OMEGA_IDLE;
-        } else if (this.input.right.isDown) {
+        } else if (this.input("RIGHT")) {
             this.player.body.angularVelocity = this.invulnerable() ? OMEGA_DASH : OMEGA_IDLE;
         } else {
             this.player.body.angularVelocity = 0;
@@ -193,6 +209,7 @@ var PLAYER = function(game) {
             } else if (this.dashTime / MAX_DASH_TIME > MIN_DASH_POWER) { // we're not dashing
                 this.dashing = true;
                 this.player.body.speed = INVULNERABLE_SPEED;
+                this.dashTime -= DASH_DEDUCT;
             }
         } else { // we shouldn't be dashing
             if (this.dashing) { // we are dashing

@@ -20,8 +20,9 @@ var CONSTANTS = {
         
         // Dash Variables
         "MAX_DASH_TIME": 750,
-        "COOLDOWN_MULTIPLIER": .2,
+        "COOLDOWN_MULTIPLIER": .15,
         "MIN_DASH_POWER": .3,
+        "DASH_DEDUCT": 100,
         
         // Other Physics Variables
         "DRAG": 200,
