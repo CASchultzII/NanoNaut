@@ -1,7 +1,7 @@
 // CONTAINS ALL THE GAME CONSTANTS
 
 var CONSTANTS = {
-    "debug": true,
+    "debug": false,
     
     "PLAYER": {
         // Player Velocities
